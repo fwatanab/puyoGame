@@ -1,0 +1,14 @@
+services:
+  puyogame:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: puyogame_container
+    working_dir: /app
+    volumes:
+      - ../:/app                 # プロジェクトディレクトリをマウント。ただし build/ は除外
+      - /tmp/.X11-unix:/tmp/.X11-unix  # X サーバのソケット共有
+    environment:
+      DISPLAY: host.docker.internal:0  # macOSの場合、XQuartzが必要
+    ports:
+      - "8080:8080"              # 必要に応じてポートを公開

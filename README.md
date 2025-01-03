@@ -40,18 +40,15 @@ make build
 2. Run the game in a container:
 ```bash
 make run
-Check the running container status:
 ```
 
 3. Check the running container status:
 ```bash
 make status
-View logs (optional):
 ```
 4. View logs (optional):
 ```bash
 make logs
-Stop and clean up:
 ```
 
 5. Stop and clean up:

@@ -1,14 +1,14 @@
 #include <Game.hpp>
 
-Game::Game() : window_(nullptr), renderer_(nullptr), isRunning_(true), spriteSheet_(SpriteSheet()) {}
+Game::Game() : window_(nullptr), renderer_(nullptr), isRunning_(false), spriteSheet_(SpriteSheet()) {}
 
 Game::~Game() {
 	close();
 }
 
 bool	Game::init() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+	if (SDL_SetHint(SDL_HINT_RENDER_DRIVER, "software") == SDL_FALSE) {
+		std::cerr << "Warning: Unable to set SDL_HINT_RENDER_DRIVER to software!" << std::endl;
 		return false;
 	}
 	window_ = SDL_CreateWindow("puyoGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -16,16 +16,19 @@ bool	Game::init() {
 		std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
 		return false;
 	}
-	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
 	if (!renderer_) {
 		std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
 		return false;
 	}
-	if (!spriteSheet_.load("../assets/images/puyo_sozai.png", renderer_)) {
+	std::string assetPath = std::string(ASSETS_DIR) + "/images/puyo_sozai.png";
+	if (!spriteSheet_.load(assetPath.c_str(), renderer_)) {
+		std::cerr << "Failed to load sprite sheet! SDL_image Error: " << IMG_GetError() << std::endl;
 		return false;
 	}
 	board_ = new Board();
 	puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
+	isRunning_ = true;
 	return true;
 }
 
@@ -43,7 +46,17 @@ void	Game::handleEvents() {
 	while (SDL_PollEvent(&event) != 0) {
 		if (event.type == SDL_QUIT) {
 			isRunning_ = false;
-		} else if (event.type == SDL_KEYDOWN) {
+		}
+
+		// ペアとして下に動かせるかを判定
+		bool isFixed = !board_->canMoveDown(*puyoPair_);
+		if (isFixed) {
+			// もしペアとして動かせない＝固定状態なので、入力を無効化して終了
+			return;
+		}
+
+		// 入力処理
+		if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym) {
 				case SDLK_LEFT:
 					if (board_->canMoveLeft(*puyoPair_)) {
@@ -56,14 +69,9 @@ void	Game::handleEvents() {
 					}
 					break;
 				case SDLK_DOWN:
-					while (board_->canMoveDown(puyoPair_->getPrimaryPuyo())) {
-						puyoPair_->moveDown(puyoPair_->getPrimaryPuyo()); // 下に落下
+					while (board_->canMoveDown(*puyoPair_)) {
+						puyoPair_->moveDown(*board_);
 					}
-					board_->fixPuyo(puyoPair_->getPrimaryPuyo());
-					while (board_->canMoveDown(puyoPair_->getSecondaryPuyo())) {
-						puyoPair_->moveDown(puyoPair_->getSecondaryPuyo()); // 下に落下
-					}
-					board_->fixPuyo(puyoPair_->getSecondaryPuyo());
 					break;
 				case SDLK_UP:
 					if (board_->canRotate(*puyoPair_)) {
@@ -76,41 +84,80 @@ void	Game::handleEvents() {
 }
 
 void	Game::update() {
-	static Uint32 lastDropTime = SDL_GetTicks(); // 最後の落下時間を記録
+	static Uint32 lastDropTime = SDL_GetTicks();
 	Uint32 currentTime = SDL_GetTicks();
 
-	// 固定状態をチェック
-	bool	isFixed = !board_->canMoveDown(puyoPair_->getPrimaryPuyo()) && !board_->canMoveDown(puyoPair_->getSecondaryPuyo());
-
-	// 固定処理を最優先
-	if (isFixed) {
+	if (!board_->canMoveDown(*puyoPair_)) {
 		board_->fixPuyo(puyoPair_->getPrimaryPuyo());
 		board_->fixPuyo(puyoPair_->getSecondaryPuyo());
-
-		// 新しいペアを生成
+		delete puyoPair_; // 既存の PuyoPair を削除
 		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor(), 3, 0);
 
-		// ゲームオーバーをチェック
 		if (board_->isGameOver()) {
 			isRunning_ = false;
 		}
-		lastDropTime = currentTime; // 固定後はタイマーをリセット
+
+		lastDropTime = currentTime;
 		return;
 	}
 
-	// 一定間隔で落下処理を実行
 	if (currentTime - lastDropTime >= 800) {
-		if (board_->canMoveDown(puyoPair_->getPrimaryPuyo())) {
-			puyoPair_->moveDown(puyoPair_->getPrimaryPuyo()); // 下に落下
-		}
-		if (board_->canMoveDown(puyoPair_->getSecondaryPuyo())) {
-			puyoPair_->moveDown(puyoPair_->getSecondaryPuyo()); // 下に落下
-		}
-		lastDropTime = currentTime; // 落下タイマーを更新
+		puyoPair_->moveDown(*board_);
+		lastDropTime = currentTime;
 	}
-	
-//	// 入力処理
-//	handleInput();
+
+
+// 	static Uint32 lastDropTime = SDL_GetTicks(); // 最後の落下時間を記録
+// 	Uint32 currentTime = SDL_GetTicks();
+// 
+// 	// 固定状態をチェック
+// 	bool	primaryFixed = !board_->canMoveDown(puyoPair_->getPrimaryPuyo());
+// 	bool	secondaryFixed = !board_->canMoveDown(puyoPair_->getSecondaryPuyo());
+// 
+// 	// 片方が固定された場合
+// 	if (primaryFixed && !secondaryFixed) {
+// 		puyoPair_->getSecondaryPuyo().setPosition(
+// 			puyoPair_->getSecondaryPuyo().getX(),
+// 			puyoPair_->getSecondaryPuyo().getY() + 1
+// 		);
+// 	} else if (!primaryFixed && secondaryFixed) {
+// 		puyoPair_->getPrimaryPuyo().setPosition(
+// 			puyoPair_->getPrimaryPuyo().getX(),
+// 			puyoPair_->getPrimaryPuyo().getY() + 1
+// 		);
+// 	}
+// 	// 両方固定された場合
+// 	if (primaryFixed && secondaryFixed) {
+// 		board_->fixPuyo(puyoPair_->getPrimaryPuyo());
+// 		board_->fixPuyo(puyoPair_->getSecondaryPuyo());
+// 		// 新しいペアを生成
+// 		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor(), 3, 0);
+// 
+// 		// ゲームオーバーをチェック
+// 		if (board_->isGameOver()) {
+// 			isRunning_ = false;
+// 		}
+// 
+// 		lastDropTime = currentTime; // 固定後はタイマーをリセット
+// 		return; // 固定後に移動や入力を無視
+// 	}
+// 
+// 	// 一定間隔で落下処理を実行
+// 	if (currentTime - lastDropTime >= 800) {
+// 		if (!primaryFixed && board_->canMoveDown(puyoPair_->getPrimaryPuyo())) {
+// 			puyoPair_->getPrimaryPuyo().setPosition(
+// 				puyoPair_->getPrimaryPuyo().getX(),
+// 				puyoPair_->getPrimaryPuyo().getY() + 1
+// 			);
+// 		}
+// 		if (!secondaryFixed && board_->canMoveDown(puyoPair_->getSecondaryPuyo())) {
+// 			puyoPair_->getSecondaryPuyo().setPosition(
+// 				puyoPair_->getSecondaryPuyo().getX(),
+// 				puyoPair_->getSecondaryPuyo().getY() + 1
+// 			);
+// 		}
+// 		lastDropTime = currentTime; // 落下タイマーを更新
+// 	}
 }
 
 void	Game::render() {

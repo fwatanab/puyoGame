@@ -1,4 +1,5 @@
 #include <PuyoPair.hpp>
+#include <Board.hpp>
 
 PuyoPair::PuyoPair(PuyoColor color1, PuyoColor color2, int startX, int startY) : primaryPuyo_(Puyo(color1, startX, startY)), secondaryPuyo_(Puyo(color2, startX, startY - 1)), rotationState_(0) {}
 
@@ -12,10 +13,22 @@ void	PuyoPair::moveRight() {
 	secondaryPuyo_.setX(secondaryPuyo_.getX() + 1);
 }
 
-void	PuyoPair::moveDown(Puyo& puyo) {
-	int	x = puyo.getX();
-	int	y = puyo.getY();
-	puyo.setPosition(x, y + 1);
+void	PuyoPair::moveDown(Board& board) {
+	// ペア全体として落とせるなら一括で落とす
+    if (board.canMoveDown(*this)) {
+        primaryPuyo_.setY(primaryPuyo_.getY() + 1);
+        secondaryPuyo_.setY(secondaryPuyo_.getY() + 1);
+    }
+//	// primary を優先して移動
+//    if (board.canMoveDown(primaryPuyo_)) {
+//        primaryPuyo_.setPosition(primaryPuyo_.getX(), primaryPuyo_.getY() + 1);
+//    }
+//
+//    // secondary を primary の位置と衝突しないように移動
+//    if (board.canMoveDown(secondaryPuyo_) &&
+//        secondaryPuyo_.getY() + 1 != primaryPuyo_.getY()) {
+//        secondaryPuyo_.setPosition(secondaryPuyo_.getX(), secondaryPuyo_.getY() + 1);
+//    }
 }
 
 void	PuyoPair::rotate() {

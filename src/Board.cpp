@@ -115,20 +115,33 @@ PuyoColor	Board::getRandomColor() {
 	return static_cast<PuyoColor>(dist(gen));
 }
 
-bool	Board::canMoveDown(const Puyo& puyo) const {
-	int	x = puyo.getX();
-	int	y = puyo.getY();
-	if (y + 1 < HEIGHT && grid_[x][y + 1].getColor() == PuyoColor::EMPTY) {
-		return true;
+bool Board::canMoveDown(const PuyoPair& pair) const {
+	// ペアのぷよを取得
+	const Puyo& p1 = pair.getPrimaryPuyo();
+	const Puyo& p2 = pair.getSecondaryPuyo();
+
+	int x1 = p1.getX();
+	int y1 = p1.getY();
+	int x2 = p2.getX();
+	int y2 = p2.getY();
+
+	// 2つのぷよそれぞれの下が空いているか
+	// あるいは盤面外に行ってしまわないかを確認
+	if (y1 + 1 >= HEIGHT || grid_[x1][y1 + 1].getColor() != PuyoColor::EMPTY) {
+		return false;
 	}
-	return false;
+	if (y2 + 1 >= HEIGHT || grid_[x2][y2 + 1].getColor() != PuyoColor::EMPTY) {
+		return false;
+	}
+
+	return true;
 }
 
-bool	Board::canMoveLeft(const PuyoPair& puyoPair) const {
-	int	x1 = puyoPair.getPrimaryPuyo().getX();
-	int	y1 = puyoPair.getPrimaryPuyo().getY();
-	int	x2 = puyoPair.getSecondaryPuyo().getX();
-	int	y2 = puyoPair.getSecondaryPuyo().getY();
+bool	Board::canMoveLeft(const PuyoPair& pair) const {
+	int	x1 = pair.getPrimaryPuyo().getX();
+	int	y1 = pair.getPrimaryPuyo().getY();
+	int	x2 = pair.getSecondaryPuyo().getX();
+	int	y2 = pair.getSecondaryPuyo().getY();
 	if ((x1 - 1 >= 0 && grid_[x1 - 1][y1].getColor() == PuyoColor::EMPTY)
 		&& (x2 - 1 >= 0 && grid_[x2 - 1][y2].getColor() == PuyoColor::EMPTY)) {
 		return true;
@@ -136,11 +149,11 @@ bool	Board::canMoveLeft(const PuyoPair& puyoPair) const {
 	return false;
 }
 
-bool	Board::canMoveRight(const PuyoPair& puyoPair) const {
-	int	x1 = puyoPair.getPrimaryPuyo().getX();
-	int	y1 = puyoPair.getPrimaryPuyo().getY();
-	int	x2 = puyoPair.getSecondaryPuyo().getX();
-	int	y2 = puyoPair.getSecondaryPuyo().getY();
+bool	Board::canMoveRight(const PuyoPair& pair) const {
+	int	x1 = pair.getPrimaryPuyo().getX();
+	int	y1 = pair.getPrimaryPuyo().getY();
+	int	x2 = pair.getSecondaryPuyo().getX();
+	int	y2 = pair.getSecondaryPuyo().getY();
 	if ((x1 + 1 < WIDTH && grid_[x1 + 1][y1].getColor() == PuyoColor::EMPTY)
 		&& (x2 + 1 < WIDTH && grid_[x2 + 1][y2].getColor() == PuyoColor::EMPTY)) {
 		return true;
@@ -148,10 +161,10 @@ bool	Board::canMoveRight(const PuyoPair& puyoPair) const {
 	return false;
 }
 
-bool	Board::canRotate(const PuyoPair& puyoPair) const {
-	int	x = puyoPair.getPrimaryPuyo().getX();
-	int	y = puyoPair.getPrimaryPuyo().getY();
-	int	rotate = puyoPair.getRotate();
+bool	Board::canRotate(const PuyoPair& pair) const {
+	int	x = pair.getPrimaryPuyo().getX();
+	int	y = pair.getPrimaryPuyo().getY();
+	int	rotate = pair.getRotate();
 	if ((rotate == 0 && x + 1 < WIDTH && grid_[x + 1][y].getColor() == PuyoColor::EMPTY)
 		|| (rotate == 1 && y + 1 < HEIGHT && grid_[x][y + 1].getColor() == PuyoColor::EMPTY)
 		|| (rotate == 2 && x - 1 >= 0 && grid_[x - 1][y].getColor() == PuyoColor::EMPTY)
@@ -164,7 +177,9 @@ bool	Board::canRotate(const PuyoPair& puyoPair) const {
 void	Board::fixPuyo(const Puyo& puyo) {
 	int	x = puyo.getX();
 	int	y = puyo.getY();
-	grid_[x][y] = Puyo(puyo.getColor(), x, y);
+	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+		grid_[x][y] = puyo; // グリッドに固定
+	}
 }
 
 bool	Board::isGameOver() const {

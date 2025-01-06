@@ -3,6 +3,9 @@
 
 #include <Puyo.hpp>
 
+// 前方宣言
+class	Board;
+
 class	PuyoPair{
 	public:
 		PuyoPair(PuyoColor color1, PuyoColor color2, int startX = 3, int startY = 0);
@@ -10,7 +13,7 @@ class	PuyoPair{
 		// 移動や回転処理
 		void	moveLeft();
 		void	moveRight();
-		void	moveDown(Puyo& puyo);
+		void	moveDown(Board& board);
 		void	rotate();
 
 		// ぷよの色と位置を取得するためのメソッド

@@ -13,7 +13,7 @@ class	PuyoPair{
 		// 移動や回転処理
 		void	moveLeft();
 		void	moveRight();
-		void	moveDown(Board& board);
+		void	moveDown();
 		void	rotate();
 
 		// ぷよの色と位置を取得するためのメソッド
@@ -23,6 +23,8 @@ class	PuyoPair{
 		const Puyo&	getSecondaryPuyo() const;
 
 		int	getRotate() const;
+
+		bool	areBothFixed(const Board& board) const;
 
 	private:
 		Puyo	primaryPuyo_; // 下側のぷよ

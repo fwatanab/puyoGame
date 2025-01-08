@@ -13,22 +13,9 @@ void	PuyoPair::moveRight() {
 	secondaryPuyo_.setX(secondaryPuyo_.getX() + 1);
 }
 
-void	PuyoPair::moveDown(Board& board) {
-	// ペア全体として落とせるなら一括で落とす
-    if (board.canMoveDown(*this)) {
-        primaryPuyo_.setY(primaryPuyo_.getY() + 1);
-        secondaryPuyo_.setY(secondaryPuyo_.getY() + 1);
-    }
-//	// primary を優先して移動
-//    if (board.canMoveDown(primaryPuyo_)) {
-//        primaryPuyo_.setPosition(primaryPuyo_.getX(), primaryPuyo_.getY() + 1);
-//    }
-//
-//    // secondary を primary の位置と衝突しないように移動
-//    if (board.canMoveDown(secondaryPuyo_) &&
-//        secondaryPuyo_.getY() + 1 != primaryPuyo_.getY()) {
-//        secondaryPuyo_.setPosition(secondaryPuyo_.getX(), secondaryPuyo_.getY() + 1);
-//    }
+void	PuyoPair::moveDown() {
+	primaryPuyo_.setY(primaryPuyo_.getY() + 1);
+	secondaryPuyo_.setY(secondaryPuyo_.getY() + 1);
 }
 
 void	PuyoPair::rotate() {
@@ -51,6 +38,14 @@ void	PuyoPair::rotate() {
 			secondaryPuyo_.setPosition(secondaryPuyo_.getX() - 1, secondaryPuyo_.getY() - 1);
 			break;
 	}
+}
+
+bool	PuyoPair::areBothFixed(const Board& board) const {
+	if (!board.canMoveDown(primaryPuyo_, secondaryPuyo_)
+		&& !board.canMoveDown(secondaryPuyo_, primaryPuyo_)) {
+		return true;
+	}
+	return false;
 }
 
 Puyo&	PuyoPair::getPrimaryPuyo() {

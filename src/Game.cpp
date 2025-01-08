@@ -48,11 +48,16 @@ void	Game::handleEvents() {
 			isRunning_ = false;
 		}
 
-		// ペアとして下に動かせるかを判定
-		bool isFixed = !board_->canMoveDown(*puyoPair_);
-		if (isFixed) {
-			// もしペアとして動かせない＝固定状態なので、入力を無効化して終了
-			return;
+		// ペア全体として動けない場合
+		if (!board_->canMoveDown(*puyoPair_)) {
+			// 片方が固定された場合、もう片方を強制的に落下させる
+			if (!board_->canMoveDown(puyoPair_->getPrimaryPuyo(), puyoPair_->getSecondaryPuyo())) {
+				board_->forceDrop(puyoPair_->getSecondaryPuyo(), puyoPair_->getPrimaryPuyo());
+			} else if (!board_->canMoveDown(puyoPair_->getSecondaryPuyo(), puyoPair_->getPrimaryPuyo())) {
+				board_->forceDrop(puyoPair_->getPrimaryPuyo(), puyoPair_->getSecondaryPuyo());
+			}
+
+			return; // 入力処理を終了
 		}
 
 		// 入力処理
@@ -70,7 +75,7 @@ void	Game::handleEvents() {
 					break;
 				case SDLK_DOWN:
 					while (board_->canMoveDown(*puyoPair_)) {
-						puyoPair_->moveDown(*board_);
+						puyoPair_->moveDown(); // 下に移動
 					}
 					break;
 				case SDLK_UP:
@@ -83,14 +88,15 @@ void	Game::handleEvents() {
 	}
 }
 
-void	Game::update() {
-	static Uint32 lastDropTime = SDL_GetTicks();
-	Uint32 currentTime = SDL_GetTicks();
+void Game::update() {
+	static Uint32	lastDropTime = SDL_GetTicks();
+	Uint32	currentTime = SDL_GetTicks();
 
-	if (!board_->canMoveDown(*puyoPair_)) {
+	if (puyoPair_->areBothFixed(*board_)) {
+		// 両方が固定されている場合、盤面に固定し新しいペアを生成
 		board_->fixPuyo(puyoPair_->getPrimaryPuyo());
 		board_->fixPuyo(puyoPair_->getSecondaryPuyo());
-		delete puyoPair_; // 既存の PuyoPair を削除
+		delete puyoPair_;
 		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor(), 3, 0);
 
 		if (board_->isGameOver()) {
@@ -101,63 +107,22 @@ void	Game::update() {
 		return;
 	}
 
-	if (currentTime - lastDropTime >= 800) {
-		puyoPair_->moveDown(*board_);
-		lastDropTime = currentTime;
+	if (!board_->canMoveDown(*puyoPair_)) {
+		// 片方が固定された場合、もう片方を強制的に落下させる
+		if (!board_->canMoveDown(puyoPair_->getPrimaryPuyo(), puyoPair_->getSecondaryPuyo())) {
+			board_->forceDrop(puyoPair_->getSecondaryPuyo(), puyoPair_->getPrimaryPuyo());
+		} else if (!board_->canMoveDown(puyoPair_->getSecondaryPuyo(), puyoPair_->getPrimaryPuyo())) {
+			board_->forceDrop(puyoPair_->getPrimaryPuyo(), puyoPair_->getSecondaryPuyo());
+		}
 	}
 
-
-// 	static Uint32 lastDropTime = SDL_GetTicks(); // 最後の落下時間を記録
-// 	Uint32 currentTime = SDL_GetTicks();
-// 
-// 	// 固定状態をチェック
-// 	bool	primaryFixed = !board_->canMoveDown(puyoPair_->getPrimaryPuyo());
-// 	bool	secondaryFixed = !board_->canMoveDown(puyoPair_->getSecondaryPuyo());
-// 
-// 	// 片方が固定された場合
-// 	if (primaryFixed && !secondaryFixed) {
-// 		puyoPair_->getSecondaryPuyo().setPosition(
-// 			puyoPair_->getSecondaryPuyo().getX(),
-// 			puyoPair_->getSecondaryPuyo().getY() + 1
-// 		);
-// 	} else if (!primaryFixed && secondaryFixed) {
-// 		puyoPair_->getPrimaryPuyo().setPosition(
-// 			puyoPair_->getPrimaryPuyo().getX(),
-// 			puyoPair_->getPrimaryPuyo().getY() + 1
-// 		);
-// 	}
-// 	// 両方固定された場合
-// 	if (primaryFixed && secondaryFixed) {
-// 		board_->fixPuyo(puyoPair_->getPrimaryPuyo());
-// 		board_->fixPuyo(puyoPair_->getSecondaryPuyo());
-// 		// 新しいペアを生成
-// 		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor(), 3, 0);
-// 
-// 		// ゲームオーバーをチェック
-// 		if (board_->isGameOver()) {
-// 			isRunning_ = false;
-// 		}
-// 
-// 		lastDropTime = currentTime; // 固定後はタイマーをリセット
-// 		return; // 固定後に移動や入力を無視
-// 	}
-// 
-// 	// 一定間隔で落下処理を実行
-// 	if (currentTime - lastDropTime >= 800) {
-// 		if (!primaryFixed && board_->canMoveDown(puyoPair_->getPrimaryPuyo())) {
-// 			puyoPair_->getPrimaryPuyo().setPosition(
-// 				puyoPair_->getPrimaryPuyo().getX(),
-// 				puyoPair_->getPrimaryPuyo().getY() + 1
-// 			);
-// 		}
-// 		if (!secondaryFixed && board_->canMoveDown(puyoPair_->getSecondaryPuyo())) {
-// 			puyoPair_->getSecondaryPuyo().setPosition(
-// 				puyoPair_->getSecondaryPuyo().getX(),
-// 				puyoPair_->getSecondaryPuyo().getY() + 1
-// 			);
-// 		}
-// 		lastDropTime = currentTime; // 落下タイマーを更新
-// 	}
+	// 一定間隔での自動落下処理
+	if (currentTime - lastDropTime >= 800) {
+		if (board_->canMoveDown(*puyoPair_)) {
+			puyoPair_->moveDown();
+		}
+		lastDropTime = currentTime;
+	}
 }
 
 void	Game::render() {

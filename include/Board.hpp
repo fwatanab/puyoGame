@@ -26,9 +26,12 @@ class	Board {
 		PuyoColor	getRandomColor();
 
 		bool	canMoveDown(const PuyoPair& pair) const;
+		bool	canMoveDown(const Puyo& puyo, const Puyo& otherPuyo) const;
 		bool	canMoveLeft(const PuyoPair& pair) const;
 		bool	canMoveRight(const PuyoPair& pair) const;
 		bool	canRotate(const PuyoPair& pair) const;
+
+		void	forceDrop(Puyo& puyo, Puyo& otherPuyo);
 		void	fixPuyo(const Puyo& puyo);
 		bool	isGameOver() const;
 	private:

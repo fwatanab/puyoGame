@@ -115,18 +115,16 @@ PuyoColor	Board::getRandomColor() {
 	return static_cast<PuyoColor>(dist(gen));
 }
 
-bool Board::canMoveDown(const PuyoPair& pair) const {
+bool	Board::canMoveDown(const PuyoPair& pair) const {
 	// ペアのぷよを取得
-	const Puyo& p1 = pair.getPrimaryPuyo();
-	const Puyo& p2 = pair.getSecondaryPuyo();
+	const Puyo&	p1 = pair.getPrimaryPuyo();
+	const Puyo&	p2 = pair.getSecondaryPuyo();
 
-	int x1 = p1.getX();
-	int y1 = p1.getY();
-	int x2 = p2.getX();
-	int y2 = p2.getY();
+	int	x1 = p1.getX();
+	int	y1 = p1.getY();
+	int	x2 = p2.getX();
+	int	y2 = p2.getY();
 
-	// 2つのぷよそれぞれの下が空いているか
-	// あるいは盤面外に行ってしまわないかを確認
 	if (y1 + 1 >= HEIGHT || grid_[x1][y1 + 1].getColor() != PuyoColor::EMPTY) {
 		return false;
 	}
@@ -134,6 +132,21 @@ bool Board::canMoveDown(const PuyoPair& pair) const {
 		return false;
 	}
 
+	return true;
+}
+
+bool	Board::canMoveDown(const Puyo& puyo, const Puyo& otherPuyo) const {
+	int	x = puyo.getX();
+	int	y = puyo.getY();
+
+	// 他方のぷよが真下にいる場合でも、さらに下が空いていれば移動可能
+	if (x == otherPuyo.getX() && y + 1 == otherPuyo.getY()) {
+		return otherPuyo.getY() + 1 < HEIGHT && grid_[x][otherPuyo.getY() + 1].getColor() == PuyoColor::EMPTY;
+	}
+
+	if (y + 1 >= HEIGHT || grid_[x][y + 1].getColor() != PuyoColor::EMPTY) {
+		return false;
+	}
 	return true;
 }
 
@@ -172,6 +185,13 @@ bool	Board::canRotate(const PuyoPair& pair) const {
 		return true;
 	}
 	return false;
+}
+
+void	Board::forceDrop(Puyo& puyo, Puyo& otherPuyo) {
+
+	while (canMoveDown(puyo, otherPuyo)) {
+		puyo.setY(puyo.getY() + 1); // 落下処理
+	}
 }
 
 void	Board::fixPuyo(const Puyo& puyo) {

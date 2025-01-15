@@ -115,6 +115,14 @@ PuyoColor	Board::getRandomColor() {
 	return static_cast<PuyoColor>(dist(gen));
 }
 
+Puyo&	Board::getGrid(int x, int y) {
+	return grid_[x][y];
+}
+
+const Puyo&	Board::getGrid(int x, int y) const {
+	return grid_[x][y];
+}
+
 bool	Board::canMoveDown(const PuyoPair& pair) const {
 	// ペアのぷよを取得
 	const Puyo&	p1 = pair.getPrimaryPuyo();

@@ -4,9 +4,11 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <Board.hpp>
-#include <SpriteSheet.hpp>
-#include <PuyoPair.hpp>
+#include "Board.hpp"
+#include "SpriteSheet.hpp"
+#include "PuyoPair.hpp"
+#include "PuyoClearer.hpp"
+#include "ChainManager.hpp"
 
 class	Game {
 	public:
@@ -29,6 +31,9 @@ class	Game {
 		Board*	board_;
 		SpriteSheet	spriteSheet_;
 		PuyoPair*	puyoPair_;
+		ChainManager*	chainManager_;
+		PuyoFinder	finder_;
+		PuyoClearer	clearer_;
 };
 
 #endif

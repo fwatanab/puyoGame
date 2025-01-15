@@ -28,6 +28,10 @@ bool	Game::init() {
 	}
 	board_ = new Board();
 	puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
+
+	// ChainManager のセットアップ
+	chainManager_ = new ChainManager(finder_, clearer_);
+
 	isRunning_ = true;
 	return true;
 }
@@ -102,6 +106,9 @@ void Game::update() {
 		if (board_->isGameOver()) {
 			isRunning_ = false;
 		}
+
+		// 連鎖処理を実行
+		chainManager_->processChains(*board_);
 
 		lastDropTime = currentTime;
 		return;

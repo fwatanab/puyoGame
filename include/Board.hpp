@@ -25,6 +25,9 @@ class	Board {
 
 		PuyoColor	getRandomColor();
 
+		Puyo&	getGrid(int x, int y);
+		const Puyo&	getGrid(int x, int y) const;
+
 		bool	canMoveDown(const PuyoPair& pair) const;
 		bool	canMoveDown(const Puyo& puyo, const Puyo& otherPuyo) const;
 		bool	canMoveLeft(const PuyoPair& pair) const;

@@ -15,6 +15,9 @@ set(SOURCE
     src/Board.cpp
     src/Puyo.cpp
     src/PuyoPair.cpp
+    src/PuyoFinder.cpp
+    src/ChainManager.cpp
+    src/PuyoClearer.cpp
     src/SpriteSheet.cpp
 )
 

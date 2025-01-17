@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(int width, int height, const std::string& title) {
+Renderer::Renderer(const std::string& title) {
 	// ソフトウェアレンダリングを指定
 	if (SDL_SetHint(SDL_HINT_RENDER_DRIVER, "software") == SDL_FALSE) {
 		std::cerr << "Warning: Unable to set SDL_HINT_RENDER_DRIVER to software!" << std::endl;
@@ -10,7 +10,7 @@ Renderer::Renderer(int width, int height, const std::string& title) {
 	window_ = SDL_CreateWindow(
 		title.c_str(),
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height,
+		SCREEN_WIDTH, SCREEN_HEIGHT,
 		SDL_WINDOW_SHOWN
 	);
 	if (!window_) {
@@ -32,16 +32,16 @@ Renderer::~Renderer() {
 
 SDL_Rect	Renderer::getDestRect(int x, int y) const {
 	SDL_Rect rect;
-	rect.x = x * Board::PUYO_SIZE;
-	rect.y = y * Board::PUYO_SIZE;
-	rect.w = Board::PUYO_SIZE;
-	rect.h = Board::PUYO_SIZE;
+	rect.x = x * PUYO_SIZE;
+	rect.y = y * PUYO_SIZE;
+	rect.w = PUYO_SIZE;
+	rect.h = PUYO_SIZE;
 	return rect;
 }
 
 void	Renderer::renderBoard(const Board& board, const SpriteSheet& spriteSheet) {
-	for (int y = 0; y < Board::HEIGHT; ++y) {
-		for (int x = 0; x < Board::WIDTH; ++x) {
+	for (int y = 0; y < BOARD_HEIGHT; ++y) {
+		for (int x = 0; x < BOARD_WIDTH; ++x) {
 			const Puyo&	puyo = board.getGrid(x, y);
 			if (puyo.getColor() != PuyoColor::EMPTY) {
 				SDL_Rect srcRect = spriteSheet.getSprite(puyo.getColor());
@@ -66,8 +66,8 @@ void	Renderer::renderPuyoPair(const PuyoPair& puyoPair, const SpriteSheet& sprit
 }
 
 void	Renderer::renderBlocks(const SpriteSheet& spriteSheet) {
-	for (int x = 0; x < Board::WIDTH + 2; ++x) {
-		for (int y = 0; y < Board::HEIGHT + 1; ++y) {
+	for (int x = 0; x < BOARD_WIDTH + 2; ++x) {
+		for (int y = 0; y < BOARD_HEIGHT + 1; ++y) {
 			SDL_Rect	srcRect = spriteSheet.getSprite(PuyoColor::EMPTY);
 			SDL_Rect	destRect = getDestRect(x, y);
 			SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRect, &destRect);

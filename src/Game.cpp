@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "ConfigManager.hpp"
 
 Game::Game() : isRunning_(false), spriteSheet_(SpriteSheet()), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
 
@@ -9,7 +10,7 @@ Game::~Game() {
 bool	Game::init() {
 	try {
 		// Renderer を初期化
-		renderer_ = new Renderer(SCREEN_WIDTH, SCREEN_HEIGHT, "Puyo Game");
+		renderer_ = new Renderer("Puyo Game");
 		// SpriteSheet のロード
 		std::string assetPath = std::string(ASSETS_DIR) + "/images/puyo_sozai.png";
 		if (!spriteSheet_.load(assetPath.c_str(), renderer_->getSDLRenderer())) {

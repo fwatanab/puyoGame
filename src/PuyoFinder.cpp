@@ -2,7 +2,7 @@
 
 void	PuyoFinder::dfs(const Board& board, int x, int y, PuyoColor color, std::vector<std::vector<bool>>& visited, std::vector<Puyo>& group) {
 	// 範囲外チェック
-	if (x < 0 || x >= Board::WIDTH || y < 0 || y >= Board::HEIGHT) {
+	if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
 		return;
 	}
 	// 訪問済みまたは色が異なる場合
@@ -23,7 +23,7 @@ void	PuyoFinder::dfs(const Board& board, int x, int y, PuyoColor color, std::vec
 
 std::vector<Puyo>	PuyoFinder::findConnectedPuyos(const Board& board, int startX, int startY) {
 	// 訪問フラグと連結したぷよのリストを初期化
-	std::vector<std::vector<bool>>	visited(Board::WIDTH, std::vector<bool>(Board::HEIGHT, false));
+	std::vector<std::vector<bool>>	visited(BOARD_WIDTH, std::vector<bool>(BOARD_HEIGHT, false));
 	std::vector<Puyo>	connectedGroup;
 
 	// 起点のぷよの色を取得
@@ -37,11 +37,11 @@ std::vector<Puyo>	PuyoFinder::findConnectedPuyos(const Board& board, int startX,
 
 std::vector<std::vector<Puyo>>	PuyoFinder::findGroupsToClear(const Board& board) {
 	// 訪問フラグと消去対象のグループを初期化
-	std::vector<std::vector<bool>> visited(Board::WIDTH, std::vector<bool>(Board::HEIGHT, false));
+	std::vector<std::vector<bool>> visited(BOARD_WIDTH, std::vector<bool>(BOARD_HEIGHT, false));
 	std::vector<std::vector<Puyo>> groupsToClear;
 
-	for (int x = 0; x < Board::WIDTH; ++x) {
-		for (int y = 0; y < Board::HEIGHT; ++y) {
+	for (int x = 0; x < BOARD_WIDTH; ++x) {
+		for (int y = 0; y < BOARD_HEIGHT; ++y) {
 			if (!visited[x][y] && board.getGrid(x, y).getColor() != PuyoColor::EMPTY) {
 				// 指定座標から連結したぷよを探索
 				std::vector<Puyo> group = findConnectedPuyos(board, x, y);

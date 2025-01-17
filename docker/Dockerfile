@@ -2,7 +2,7 @@
 FROM debian:bookworm
 
 # 必要パッケージのインストール
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     pkg-config \
@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     libxext-dev \
     wget \
     tar \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # SDL2 のソースコードをダウンロードしてビルド
@@ -23,7 +25,7 @@ RUN wget https://www.libsdl.org/release/SDL2-2.28.0.tar.gz -O /tmp/SDL2.tar.gz \
     && rm -rf /tmp/SDL2*
 
 # SDL2_image の依存関係をインストール
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libsdl2-image-dev \
     libjpeg-dev \
     libpng-dev \

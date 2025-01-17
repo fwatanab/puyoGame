@@ -7,12 +7,22 @@ Renderer::Renderer(const std::string& title) {
 	}
 
 	// ウィンドウ作成
-	window_ = SDL_CreateWindow(
-		title.c_str(),
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		SCREEN_WIDTH, SCREEN_HEIGHT,
-		SDL_WINDOW_SHOWN
-	);
+	if (FULLSCREEN) {
+		window_ = SDL_CreateWindow(
+			title.c_str(),
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			SCREEN_WIDTH, SCREEN_HEIGHT,
+			SDL_WINDOW_FULLSCREEN // フルスクリーンモードに変更
+		);
+	} else {
+		window_ = SDL_CreateWindow(
+			title.c_str(),
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			SCREEN_WIDTH, SCREEN_HEIGHT,
+			SDL_WINDOW_SHOWN
+		);
+	}
+
 	if (!window_) {
 		throw std::runtime_error("Window could not be created! SDL_Error: " + std::string(SDL_GetError()));
 	}

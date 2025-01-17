@@ -8,6 +8,22 @@ project(PuyoGame VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# スクリプトと出力ファイルのパスを設定
+set(GENERATE_SCRIPT ${PROJECT_SOURCE_DIR}/scripts/generate_config.py)
+set(GENERATED_HEADER ${PROJECT_SOURCE_DIR}/include/GeneratedConfig.hpp)
+
+# JSON設定ファイルからヘッダーファイルを生成するカスタムコマンド
+add_custom_command(
+    OUTPUT ${GENERATED_HEADER}
+    COMMAND python3 ${GENERATE_SCRIPT}
+    DEPENDS ${PROJECT_SOURCE_DIR}/config.json ${GENERATE_SCRIPT}
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMENT "Generating GeneratedConfig.hpp from config.json"
+)
+
+# 生成されたヘッダーファイルを対象に含めるカスタムターゲット
+add_custom_target(GenerateConfig ALL DEPENDS ${GENERATED_HEADER})
+
 # ソースファイルの指定
 set(SOURCE
     src/main.cpp
@@ -27,7 +43,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # 実行ファイルを生成
 add_executable(PuyoGame ${SOURCE})
+
+# Include ディレクトリを追加
 target_include_directories(PuyoGame PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+# PuyoGame のビルドに GenerateConfig を依存関係として追加
+add_dependencies(PuyoGame GenerateConfig)
 
 # SDL2 の設定
 find_package(SDL2 REQUIRED)

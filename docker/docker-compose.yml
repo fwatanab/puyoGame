@@ -6,7 +6,8 @@ services:
     container_name: puyogame_container
     working_dir: /app
     environment:
-      - DISPLAY=host.docker.internal:0
+      - DISPLAY=host.docker.internal:0  # macOS/Windows
+      # - DISPLAY=:0  # Linux
       - SDL_HINT_RENDER_DRIVER=software  # ソフトウェアレンダリングを強制
       - LIBGL_ALWAYS_SOFTWARE=1
       - SDL_VIDEODRIVER=x11

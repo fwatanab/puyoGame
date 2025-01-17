@@ -10,9 +10,7 @@
 
 class	Renderer {
 	public:
-		static const int PUYO_SIZE = 32;
-
-		Renderer(int width, int height, const std::string& title);
+		Renderer(const std::string& title);
 		~Renderer();
 
 		// 描画関数

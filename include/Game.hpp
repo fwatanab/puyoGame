@@ -8,13 +8,10 @@
 #include "PuyoPair.hpp"
 #include "PuyoClearer.hpp"
 #include "ChainManager.hpp"
+#include "GeneratedConfig.hpp"
 
 class	Game {
 	public:
-		static const int SCREEN_WIDTH = 640;
-		static const int SCREEN_HEIGHT = 480;
-		static const int PUYO_SIZE = 32;
-
 		Game();
 		~Game();
 		bool	init();

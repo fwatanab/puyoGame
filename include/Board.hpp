@@ -3,17 +3,13 @@
 
 #include <SDL2/SDL.h>
 #include <Puyo.hpp>
-#include <SpriteSheet.hpp>
-#include <PuyoPair.hpp>
+#include "SpriteSheet.hpp"
+#include "PuyoPair.hpp"
+#include "GeneratedConfig.hpp"
 #include <random>
 
 class	Board {
 	public:
-		static const int	WIDTH = 6;
-		static const int	HEIGHT = 13;
-		static const int	PUYO_SIZE = 32;
-		static const int	BLOCK_SIZE = 32;
-
 		Board();
 		~Board();
 
@@ -34,7 +30,7 @@ class	Board {
 		void	fixPuyo(const Puyo& puyo);
 		bool	isGameOver() const;
 	private:
-		Puyo	grid_[WIDTH][HEIGHT];
+		Puyo	grid_[BOARD_WIDTH][BOARD_HEIGHT];
 };
 
 #endif

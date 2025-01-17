@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game::Game() : isRunning_(false), spriteSheet_(), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
+Game::Game() : isRunning_(false), spriteSheet_(SpriteSheet()), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
 
 Game::~Game() {
 	close();
@@ -16,16 +16,16 @@ bool	Game::init() {
 			std::cerr << "Failed to load sprite sheet! SDL_image Error: " << IMG_GetError() << std::endl;
 			return false;
 		}
+		board_ = new Board();
+		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
+
+		// ChainManager のセットアップ
+		chainManager_ = new ChainManager(finder_, clearer_, *renderer_);
 	} catch (const std::runtime_error& e) {
 		std::cerr << "Initialization error: " << e.what() << std::endl;
 		return false;
 	}
 
-	board_ = new Board();
-	puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
-
-	// ChainManager のセットアップ
-	chainManager_ = new ChainManager(finder_, clearer_);
 
 	isRunning_ = true;
 	return true;
@@ -103,7 +103,7 @@ void Game::update() {
 		}
 
 		// 連鎖処理を実行
-		chainManager_->processChains(*board_);
+		chainManager_->processChains(*board_, spriteSheet_);
 
 		lastDropTime = currentTime;
 		return;
@@ -135,9 +135,21 @@ void	Game::render() {
 }
 
 void	Game::close() {
-	delete renderer_;
-	delete board_;
-	delete puyoPair_;
-	delete chainManager_;
+	if (renderer_) {
+		delete renderer_;
+		renderer_ = nullptr;
+	}
+	if (board_) {
+		delete board_;
+		board_ = nullptr;
+	}
+	if (puyoPair_) {
+		delete puyoPair_;
+		puyoPair_ = nullptr;
+	}
+	if (chainManager_) {
+		delete chainManager_;
+		chainManager_ = nullptr;
+	}
 	SDL_Quit();
 }

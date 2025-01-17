@@ -30,6 +30,12 @@ RUN apt-get update && apt-get install -y \
     libtiff-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# JSON関連ライブラリ
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libjsoncpp-dev \
+    nlohmann-json3-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # 作業ディレクトリを設定
 WORKDIR /app
 

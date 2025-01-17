@@ -69,6 +69,15 @@ else()
     message(FATAL_ERROR "X11 not found!")
 endif()
 
+# nlohmann/json の設定
+find_package(nlohmann_json REQUIRED)
+if(nlohmann_json_FOUND)
+    message(STATUS "Found nlohmann_json")
+    target_link_libraries(PuyoGame PRIVATE nlohmann_json::nlohmann_json)
+else()
+    message(FATAL_ERROR "nlohmann_json not found!")
+endif()
+
 # アセットディレクトリの定義
 set(ASSETS_DIR "${PROJECT_SOURCE_DIR}/assets")
 target_compile_definitions(PuyoGame PRIVATE ASSETS_DIR="${ASSETS_DIR}")

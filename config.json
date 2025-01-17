@@ -1,0 +1,21 @@
+{
+  "screen": {
+    "fullscreen": true,
+    "resolution": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "board": {
+    "width": 6,
+    "height": 12,
+    "puyo_size": 64,
+    "margin_top": 100,
+    "margin_side": 50
+  },
+  "gameplay": {
+    "drop_interval": 800,
+    "chain_speed": 200,
+    "gravity_speed": 50
+  }
+}

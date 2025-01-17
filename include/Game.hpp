@@ -2,9 +2,8 @@
 #define GAME_HPP
 
 #include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include "Board.hpp"
+#include "Renderer.hpp"
 #include "SpriteSheet.hpp"
 #include "PuyoPair.hpp"
 #include "PuyoClearer.hpp"
@@ -15,6 +14,7 @@ class	Game {
 		static const int SCREEN_WIDTH = 640;
 		static const int SCREEN_HEIGHT = 480;
 		static const int PUYO_SIZE = 32;
+
 		Game();
 		~Game();
 		bool	init();
@@ -24,10 +24,9 @@ class	Game {
 		void	render();
 		void	close();
 	private:
-		SDL_Window*	window_;
-		SDL_Renderer*	renderer_;
 		bool	isRunning_;
 
+		Renderer*	renderer_;
 		Board*	board_;
 		SpriteSheet	spriteSheet_;
 		PuyoPair*	puyoPair_;

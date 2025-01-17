@@ -1,31 +1,26 @@
-#include <Game.hpp>
+#include "Game.hpp"
 
-Game::Game() : window_(nullptr), renderer_(nullptr), isRunning_(false), spriteSheet_(SpriteSheet()) {}
+Game::Game() : isRunning_(false), spriteSheet_(), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
 
 Game::~Game() {
 	close();
 }
 
 bool	Game::init() {
-	if (SDL_SetHint(SDL_HINT_RENDER_DRIVER, "software") == SDL_FALSE) {
-		std::cerr << "Warning: Unable to set SDL_HINT_RENDER_DRIVER to software!" << std::endl;
+	try {
+		// Renderer を初期化
+		renderer_ = new Renderer(SCREEN_WIDTH, SCREEN_HEIGHT, "Puyo Game");
+		// SpriteSheet のロード
+		std::string assetPath = std::string(ASSETS_DIR) + "/images/puyo_sozai.png";
+		if (!spriteSheet_.load(assetPath.c_str(), renderer_->getSDLRenderer())) {
+			std::cerr << "Failed to load sprite sheet! SDL_image Error: " << IMG_GetError() << std::endl;
+			return false;
+		}
+	} catch (const std::runtime_error& e) {
+		std::cerr << "Initialization error: " << e.what() << std::endl;
 		return false;
 	}
-	window_ = SDL_CreateWindow("puyoGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (!window_) {
-		std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-		return false;
-	}
-	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
-	if (!renderer_) {
-		std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-		return false;
-	}
-	std::string assetPath = std::string(ASSETS_DIR) + "/images/puyo_sozai.png";
-	if (!spriteSheet_.load(assetPath.c_str(), renderer_)) {
-		std::cerr << "Failed to load sprite sheet! SDL_image Error: " << IMG_GetError() << std::endl;
-		return false;
-	}
+
 	board_ = new Board();
 	puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
 
@@ -133,33 +128,16 @@ void Game::update() {
 }
 
 void	Game::render() {
-	SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(renderer_);
-
-	board_->drawBlock(renderer_, spriteSheet_);
-	board_->draw(renderer_, spriteSheet_);
-
-	// primaryPuyo の描画
-	SDL_Rect	srcRect1 = board_->getSrcRect(puyoPair_->getPrimaryPuyo().getColor(), spriteSheet_);
-	SDL_Rect	destRect1 = board_->getDestRect(puyoPair_->getPrimaryPuyo().getX(), puyoPair_->getPrimaryPuyo().getY());
-	SDL_RenderCopy(renderer_, spriteSheet_.getTexture(), &srcRect1, &destRect1);
-
-	// secondaryPuyo の描画
-	SDL_Rect	srcRect2 = board_->getSrcRect(puyoPair_->getSecondaryPuyo().getColor(), spriteSheet_);
-	SDL_Rect	destRect2 = board_->getDestRect(puyoPair_->getSecondaryPuyo().getX(), puyoPair_->getSecondaryPuyo().getY());
-	SDL_RenderCopy(renderer_, spriteSheet_.getTexture(), &srcRect2, &destRect2);
-
-	SDL_RenderPresent(renderer_);
+	renderer_->clear();
+	renderer_->renderBoard(*board_, spriteSheet_);
+	renderer_->renderPuyoPair(*puyoPair_, spriteSheet_);
+	renderer_->present();
 }
 
 void	Game::close() {
-	if (renderer_) {
-		SDL_DestroyRenderer(renderer_);
-	}
-
-	if (window_) {
-		SDL_DestroyWindow(window_);
-	}
-
+	delete renderer_;
+	delete board_;
+	delete puyoPair_;
+	delete chainManager_;
 	SDL_Quit();
 }

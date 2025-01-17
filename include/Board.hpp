@@ -18,10 +18,6 @@ class	Board {
 		~Board();
 
 		void	init();
-		SDL_Rect	getSrcRect(PuyoColor color, SpriteSheet& spriteSheet);
-		SDL_Rect	getDestRect(int x, int y);
-		void	draw(SDL_Renderer* renderer, SpriteSheet& spriteSheet);
-		void	drawBlock(SDL_Renderer* renderer, SpriteSheet& spriteSheet);
 
 		PuyoColor	getRandomColor();
 

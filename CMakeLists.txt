@@ -13,6 +13,7 @@ set(SOURCE
     src/main.cpp
     src/Game.cpp
     src/Board.cpp
+    src/Renderer.cpp
     src/Puyo.cpp
     src/PuyoPair.cpp
     src/PuyoFinder.cpp

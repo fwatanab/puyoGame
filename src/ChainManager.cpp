@@ -1,11 +1,8 @@
 #include "ChainManager.hpp"
-#include <vector>
 
-ChainManager::ChainManager(PuyoFinder& finder, PuyoClearer& clearer) : finder_(finder), clearer_(clearer) {}
-//, PuyoClearer& clearer, ScoreManager& scorer)
-//	: finder_(finder), clearer_(clearer), scorer_(scorer) {}
+ChainManager::ChainManager(PuyoFinder& finder, PuyoClearer& clearer, Renderer& renderer) : finder_(finder), clearer_(clearer), renderer_(renderer) {}
 
-void	ChainManager::processChains(Board& board) {
+void	ChainManager::processChains(Board& board, SpriteSheet& spriteSheet) {
 	int	chainCount = 0; // 連鎖回数のカウント
 
 	while (true) {
@@ -15,8 +12,17 @@ void	ChainManager::processChains(Board& board) {
 			break; // 消去対象がなくなったら終了
 		}
 
+		// 削除前に画面を更新
+		updateRendering(board, spriteSheet);
+
+		// 1秒待機
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+
 		// グループを消去
 		clearer_.clearPuyos(board, groups);
+
+		// 消去後に画面を更新
+		updateRendering(board, spriteSheet);
 
 		// 1秒待機
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -28,10 +34,16 @@ void	ChainManager::processChains(Board& board) {
 		// 重力を適用
 		clearer_.applyGravity(board);
 
-		// 再び1秒待機
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		// 落下後に画面を更新
+		updateRendering(board, spriteSheet);
 
 		// 連鎖回数を増加
 		chainCount++;
 	}
+}
+
+void	ChainManager::updateRendering(Board& board, SpriteSheet& spriteSheet) {
+	renderer_.clear();                           // 描画クリア
+	renderer_.renderBoard(board, spriteSheet);   // 盤面描画
+	renderer_.present();                         // 描画を反映
 }

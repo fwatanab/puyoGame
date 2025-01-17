@@ -120,7 +120,7 @@ void Game::update() {
 	}
 
 	// 一定間隔での自動落下処理
-	if (currentTime - lastDropTime >= 800) {
+	if (currentTime - lastDropTime >= DROP_INTERVAL) {
 		if (board_->canMoveDown(*puyoPair_)) {
 			puyoPair_->moveDown();
 		}

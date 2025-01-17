@@ -1,28 +1,34 @@
 #ifndef SPRITESHEET_HPP
 #define SPRITESHEET_HPP
 
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <string>
 #include <iostream>
+#include <string>
+#include <unordered_map>
+#include "Puyo.hpp" // PuyoColor を利用するため
 
 class	SpriteSheet {
 	public:
 		SpriteSheet();
 		~SpriteSheet();
 
-		// スプライトシートを読み込む
-		bool	load(const std::string& filePath, SDL_Renderer* renderer);
+		// 画像ファイルをロード
+		bool	load(const std::string& path, SDL_Renderer* renderer);
 
-		// スプライトシートから特定のスプライトを切り出す
-		SDL_Rect	getSprite(int x, int y, int width, int height);
-
-		// スプライトシートのメモリ解放
-	void	clear();
-
-		// スプライトシートのテクスチャを取得
+		// テクスチャを取得
 		SDL_Texture*	getTexture() const;
+
+		// 指定された PuyoColor のスプライト領域を取得
+		SDL_Rect	getSprite(PuyoColor color) const;
+
 	private:
-		SDL_Texture*	spriteSheet_;
+		SDL_Texture*	texture_; // スプライトシートのテクスチャ
+		static bool	isInitialized_;
+		std::unordered_map<PuyoColor, SDL_Rect>	spriteMap_; // 色とスプライト領域の対応表
+
+		// スプライトマップを初期化
+		void	initializeSpriteMap();
 };
 
 #endif

@@ -16,7 +16,7 @@ void	ChainManager::processChains(Board& board, SpriteSheet& spriteSheet) {
 		updateRendering(board, spriteSheet);
 
 		// 1秒待機
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(GRAVITY_SPEED));
 
 		// グループを消去
 		clearer_.clearPuyos(board, groups);
@@ -25,7 +25,7 @@ void	ChainManager::processChains(Board& board, SpriteSheet& spriteSheet) {
 		updateRendering(board, spriteSheet);
 
 		// 1秒待機
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(CHAIN_SPEED));
 
 //		// 得点を計算して加算
 //		int	score = scorer_.calculateScore(groups.size(), chainCount);

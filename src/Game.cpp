@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "ConfigManager.hpp"
 
 Game::Game() : isRunning_(false), spriteSheet_(SpriteSheet()), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
 
@@ -97,7 +96,7 @@ void Game::update() {
 		board_->fixPuyo(puyoPair_->getPrimaryPuyo());
 		board_->fixPuyo(puyoPair_->getSecondaryPuyo());
 		delete puyoPair_;
-		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor(), 3, 0);
+		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor());
 
 		if (board_->isGameOver()) {
 			isRunning_ = false;

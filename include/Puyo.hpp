@@ -7,6 +7,7 @@ enum class	PuyoColor {
 	GREEN,
 	YELLOW,
 	PURPLE,
+	WALL,
 	EMPTY
 };
 

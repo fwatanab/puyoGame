@@ -62,6 +62,7 @@ void	SpriteSheet::initializeSpriteMap() {
 	spriteMap_[PuyoColor::GREEN] = {2 * PUYO_SIZE, 0 * PUYO_SIZE, PUYO_SIZE, PUYO_SIZE};
 	spriteMap_[PuyoColor::YELLOW] = {3 * PUYO_SIZE, 0 * PUYO_SIZE, PUYO_SIZE, PUYO_SIZE};
 	spriteMap_[PuyoColor::PURPLE] = {4 * PUYO_SIZE, 0 * PUYO_SIZE, PUYO_SIZE, PUYO_SIZE};
+	spriteMap_[PuyoColor::WALL] = {5 * PUYO_SIZE, 0 * PUYO_SIZE, PUYO_SIZE, PUYO_SIZE};
 	spriteMap_[PuyoColor::EMPTY] = {5 * PUYO_SIZE, 1 * PUYO_SIZE, PUYO_SIZE, PUYO_SIZE};
 }
 

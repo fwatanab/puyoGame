@@ -50,14 +50,22 @@ SDL_Rect	Renderer::getDestRect(int x, int y) const {
 }
 
 void	Renderer::renderBoard(const Board& board, const SpriteSheet& spriteSheet) {
-	for (int y = 0; y < BOARD_HEIGHT; ++y) {
-		for (int x = 0; x < BOARD_WIDTH; ++x) {
-			const Puyo&	puyo = board.getGrid(x, y);
-			if (puyo.getColor() != PuyoColor::EMPTY) {
-				SDL_Rect srcRect = spriteSheet.getSprite(puyo.getColor());
-				SDL_Rect destRect = getDestRect(x, y);
-				SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRect, &destRect);
+	// 壁の描画
+	for (int y = 0; y < BOARD_HEIGHT + 1; ++y) { // 下の壁を考慮
+		for (int x = 0; x < BOARD_WIDTH + 2; ++x) { // 左右の壁を考慮
+			SDL_Rect	srcRect;
+			SDL_Rect	destRect = getDestRect(x, y);
+
+			if (x == 0 || x == BOARD_WIDTH + 1 || y == BOARD_HEIGHT) {
+				// 壁の描画
+				srcRect = spriteSheet.getSprite(PuyoColor::WALL);
+			} else {
+				// ボード内のぷよの描画
+				const Puyo& puyo = board.getGrid(x - 1, y); // 左右の壁を補正
+				srcRect = spriteSheet.getSprite(puyo.getColor());
 			}
+
+			SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRect, &destRect);
 		}
 	}
 }
@@ -66,23 +74,18 @@ void	Renderer::renderPuyoPair(const PuyoPair& puyoPair, const SpriteSheet& sprit
 	const Puyo&	primary = puyoPair.getPrimaryPuyo();
 	const Puyo&	secondary = puyoPair.getSecondaryPuyo();
 
+	int	primaryX = primary.getX() + 1; // 左の壁を避けるため +1
+	int	primaryY = primary.getY();
+	int	secondaryX = secondary.getX() + 1; // 左の壁を避けるため +1
+	int	secondaryY = secondary.getY();
+
 	SDL_Rect	srcRectPrimary = spriteSheet.getSprite(primary.getColor());
-	SDL_Rect	destRectPrimary = getDestRect(primary.getX(), primary.getY());
+	SDL_Rect	destRectPrimary = getDestRect(primaryX, primaryY);
 	SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRectPrimary, &destRectPrimary);
 
 	SDL_Rect	srcRectSecondary = spriteSheet.getSprite(secondary.getColor());
-	SDL_Rect	destRectSecondary = getDestRect(secondary.getX(), secondary.getY());
+	SDL_Rect	destRectSecondary = getDestRect(secondaryX, secondaryY);
 	SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRectSecondary, &destRectSecondary);
-}
-
-void	Renderer::renderBlocks(const SpriteSheet& spriteSheet) {
-	for (int x = 0; x < BOARD_WIDTH + 2; ++x) {
-		for (int y = 0; y < BOARD_HEIGHT + 1; ++y) {
-			SDL_Rect	srcRect = spriteSheet.getSprite(PuyoColor::EMPTY);
-			SDL_Rect	destRect = getDestRect(x, y);
-			SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRect, &destRect);
-		}
-	}
 }
 
 SDL_Renderer*	Renderer::getSDLRenderer() const {

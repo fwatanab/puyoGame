@@ -16,7 +16,6 @@ class	Renderer {
 		// 描画関数
 		void	renderBoard(const Board& board, const SpriteSheet& spriteSheet);
 		void	renderPuyoPair(const PuyoPair& pair, const SpriteSheet& spriteSheet);
-		void	renderBlocks(const SpriteSheet& spriteSheet);
 		void	present(); // 描画を反映
 		void	clear();   // 描画領域をクリア
 

@@ -1,21 +1,34 @@
 {
-  "screen": {
-    "fullscreen": true,
-    "resolution": {
-      "width": 1920,
-      "height": 1080
+    "screen": {
+        "fullscreen": true,
+        "resolution": {
+            "width": 1920,
+            "height": 1080
+        }
+    },
+    "board": {
+        "width": 6,
+        "height": 12,
+        "puyo_size": 64,
+        "margin_top": 100,
+        "margin_side": 50
+    },
+    "gameplay": {
+        "drop_interval": 700,
+        "chain_speed": 200,
+        "gravity_speed": 50
+    },
+    "themes": {
+        "default": {
+            "background": "assets/images/default_bg.png",
+            "puyo_colors": {
+                "red": "assets/images/red_puyo.png",
+                "blue": "assets/images/blue_puyo.png",
+                "green": "assets/images/green_puyo.png",
+                "yellow": "assets/images/yellow_puyo.png",
+                "purple": "assets/images/purple_puyo.png",
+                "garbage": "assets/images/garbage_puyo.png"
+            }
+        }
     }
-  },
-  "board": {
-    "width": 6,
-    "height": 12,
-    "puyo_size": 64,
-    "margin_top": 100,
-    "margin_side": 50
-  },
-  "gameplay": {
-    "drop_interval": 800,
-    "chain_speed": 200,
-    "gravity_speed": 50
-  }
 }

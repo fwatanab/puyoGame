@@ -34,6 +34,17 @@ def generate_header():
             header_file.write(f"#define CHAIN_SPEED {config['gameplay']['chain_speed']}\n")
             header_file.write(f"#define GRAVITY_SPEED {config['gameplay']['gravity_speed']}\n")
 
+            # テーマ設定
+            themes = config['themes']
+            header_file.write("\n// テーマ設定\n")
+            header_file.write(f"#define BACKGROUND_IMAGE \"{themes['default']['background']}\"\n")
+
+            puyo_colors = themes['default']['puyo_colors']
+            for color, image_path in puyo_colors.items():
+                # 各ぷよの色を定義
+                macro_name = f"PUYO_{color.upper()}_IMAGE"
+                header_file.write(f"#define {macro_name} \"{image_path}\"\n")
+
             print(f"Generated {OUTPUT_FILE} successfully.")
     except Exception as e:
         print(f"Error generating header: {e}")

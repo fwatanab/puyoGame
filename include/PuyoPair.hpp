@@ -8,7 +8,7 @@ class	Board;
 
 class	PuyoPair{
 	public:
-		PuyoPair(PuyoColor color1, PuyoColor color2, int startX = 3, int startY = 0);
+		PuyoPair(PuyoColor color1, PuyoColor color2, int startX = 2, int startY = 0);
 
 		// 移動や回転処理
 		void	moveLeft();

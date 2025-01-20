@@ -119,7 +119,7 @@ void	Board::fixPuyo(const Puyo& puyo) {
 }
 
 bool	Board::isGameOver() const {
-	if (grid_[3][0].getColor() != PuyoColor::EMPTY) {
+	if (grid_[2][0].getColor() != PuyoColor::EMPTY) {
 		return true;
 	}
 	return false;

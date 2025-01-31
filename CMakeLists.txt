@@ -35,7 +35,7 @@ set(SOURCE
     src/PuyoFinder.cpp
     src/ChainManager.cpp
     src/PuyoClearer.cpp
-    src/SpriteSheet.cpp
+    src/ImageManager.cpp
 )
 
 # 実行ファイルをビルドディレクトリに生成

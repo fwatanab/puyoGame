@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <Puyo.hpp>
-#include "SpriteSheet.hpp"
 #include "PuyoPair.hpp"
 #include "GeneratedConfig.hpp"
 #include <random>

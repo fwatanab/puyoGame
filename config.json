@@ -9,7 +9,7 @@
     "board": {
         "width": 6,
         "height": 12,
-        "puyo_size": 64,
+        "puyo_size": 44,
         "margin_top": 100,
         "margin_side": 50
     },
@@ -27,7 +27,8 @@
                 "green": "assets/images/green_puyo.png",
                 "yellow": "assets/images/yellow_puyo.png",
                 "purple": "assets/images/purple_puyo.png",
-                "garbage": "assets/images/garbage_puyo.png"
+                "garbage": "assets/images/garbage_puyo.png",
+                "wall": "assets/images/wall.png"
             }
         }
     }

@@ -27,15 +27,15 @@ add_custom_target(GenerateConfig ALL DEPENDS ${GENERATED_HEADER})
 # ソースファイルの指定
 set(SOURCE
     src/main.cpp
-    src/Game.cpp
-    src/Board.cpp
-    src/Renderer.cpp
-    src/Puyo.cpp
-    src/PuyoPair.cpp
-    src/PuyoFinder.cpp
-    src/ChainManager.cpp
-    src/PuyoClearer.cpp
-    src/ImageManager.cpp
+    src/game/Game.cpp
+    src/game/Board.cpp
+    src/graphics/Renderer.cpp
+    src/game/Puyo.cpp
+    src/game/PuyoPair.cpp
+    src/game/PuyoFinder.cpp
+    src/game/ChainManager.cpp
+    src/game/PuyoClearer.cpp
+    src/graphics/ImageManager.cpp
 )
 
 # 実行ファイルをビルドディレクトリに生成

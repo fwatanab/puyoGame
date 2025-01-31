@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game::Game() : isRunning_(false), spriteSheet_(SpriteSheet()), renderer_(nullptr), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
+Game::Game() : isRunning_(false), renderer_(nullptr), imageManager_(ImageManager()), board_(nullptr), puyoPair_(nullptr), chainManager_(nullptr) {}
 
 Game::~Game() {
 	close();
@@ -10,12 +10,8 @@ bool	Game::init() {
 	try {
 		// Renderer を初期化
 		renderer_ = new Renderer("Puyo Game");
-		// SpriteSheet のロード
-		std::string assetPath = std::string(ASSETS_DIR) + "/images/puyo_sozai.png";
-		if (!spriteSheet_.load(assetPath.c_str(), renderer_->getSDLRenderer())) {
-			std::cerr << "Failed to load sprite sheet! SDL_image Error: " << IMG_GetError() << std::endl;
-			return false;
-		}
+		// ImageManager を初期化
+		imageManager_.initTextures(renderer_->getSDLRenderer());
 		board_ = new Board();
 		puyoPair_ = new PuyoPair(board_->getRandomColor(), board_->getRandomColor()); // 初期のぷよを生成
 
@@ -103,7 +99,7 @@ void Game::update() {
 		}
 
 		// 連鎖処理を実行
-		chainManager_->processChains(*board_, spriteSheet_);
+		chainManager_->processChains(*board_, imageManager_);
 
 		lastDropTime = currentTime;
 		return;
@@ -129,8 +125,8 @@ void Game::update() {
 
 void	Game::render() {
 	renderer_->clear();
-	renderer_->renderBoard(*board_, spriteSheet_);
-	renderer_->renderPuyoPair(*puyoPair_, spriteSheet_);
+	renderer_->renderBoard(*board_, imageManager_);
+	renderer_->renderPuyoPair(*puyoPair_, imageManager_);
 	renderer_->present();
 }
 

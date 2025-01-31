@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include "Board.hpp"
 #include "PuyoPair.hpp"
-#include "SpriteSheet.hpp"
+#include "ImageManager.hpp"
 #include <stdexcept>
 
 class	Renderer {
@@ -14,8 +14,8 @@ class	Renderer {
 		~Renderer();
 
 		// 描画関数
-		void	renderBoard(const Board& board, const SpriteSheet& spriteSheet);
-		void	renderPuyoPair(const PuyoPair& pair, const SpriteSheet& spriteSheet);
+		void	renderBoard(const Board& board, const ImageManager& imageManager);
+		void	renderPuyoPair(const PuyoPair& pair, const ImageManager& imageManager);
 		void	present(); // 描画を反映
 		void	clear();   // 描画領域をクリア
 

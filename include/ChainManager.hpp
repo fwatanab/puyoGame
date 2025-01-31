@@ -15,10 +15,10 @@ class	ChainManager {
 		ChainManager(PuyoFinder& finder, PuyoClearer& clearer, Renderer& renderer);
 
 		// 連鎖の進行を管理
-		void	processChains(Board& board, SpriteSheet& spriteSheet);
+		void	processChains(Board& board, ImageManager& imageManager);
 
 		// 描画の更新
-		void	updateRendering(Board& board, SpriteSheet& spriteSheet);
+		void	updateRendering(Board& board, ImageManager& imageManager);
 
 	private:
 		PuyoFinder&	finder_;

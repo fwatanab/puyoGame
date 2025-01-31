@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include <iostream>
 
 Renderer::Renderer(const std::string& title) {
 	// ソフトウェアレンダリングを指定
@@ -49,28 +50,34 @@ SDL_Rect	Renderer::getDestRect(int x, int y) const {
 	return rect;
 }
 
-void	Renderer::renderBoard(const Board& board, const SpriteSheet& spriteSheet) {
-	// 壁の描画
-	for (int y = 0; y < BOARD_HEIGHT + 1; ++y) { // 下の壁を考慮
-		for (int x = 0; x < BOARD_WIDTH + 2; ++x) { // 左右の壁を考慮
-			SDL_Rect	srcRect;
-			SDL_Rect	destRect = getDestRect(x, y);
 
+void	Renderer::renderBoard(const Board& board, const ImageManager& imageManager) {
+	// 壁の描画
+	for (int y = 0; y < BOARD_HEIGHT + 1; ++y) {
+		for (int x = 0; x < BOARD_WIDTH + 2; ++x) {
+			SDL_Rect	destRect = getDestRect(x, y);
+			SDL_Texture*	texture;
 			if (x == 0 || x == BOARD_WIDTH + 1 || y == BOARD_HEIGHT) {
 				// 壁の描画
-				srcRect = spriteSheet.getSprite(PuyoColor::WALL);
+				texture = imageManager.getTexture(PuyoColor::WALL);
 			} else {
 				// ボード内のぷよの描画
-				const Puyo& puyo = board.getGrid(x - 1, y); // 左右の壁を補正
-				srcRect = spriteSheet.getSprite(puyo.getColor());
+				const Puyo&	puyo = board.getGrid(x - 1, y);
+				texture = imageManager.getTexture(puyo.getColor());
 			}
-
-			SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRect, &destRect);
+			
+			// テクスチャが nullptr でない場合にのみ描画を行う
+			if (texture) {
+				SDL_RenderCopy(renderer_, texture, nullptr, &destRect);
+			} else {
+				std::cerr << "Warning: Texture not found for rendering at (" << x << ", " << y << ")." << std::endl;
+			}
 		}
 	}
 }
 
-void	Renderer::renderPuyoPair(const PuyoPair& puyoPair, const SpriteSheet& spriteSheet) {
+
+void Renderer::renderPuyoPair(const PuyoPair& puyoPair, const ImageManager& imageManager) {
 	const Puyo&	primary = puyoPair.getPrimaryPuyo();
 	const Puyo&	secondary = puyoPair.getSecondaryPuyo();
 
@@ -79,13 +86,13 @@ void	Renderer::renderPuyoPair(const PuyoPair& puyoPair, const SpriteSheet& sprit
 	int	secondaryX = secondary.getX() + 1; // 左の壁を避けるため +1
 	int	secondaryY = secondary.getY();
 
-	SDL_Rect	srcRectPrimary = spriteSheet.getSprite(primary.getColor());
+	SDL_Texture*	texturePrimary = imageManager.getTexture(primary.getColor());
 	SDL_Rect	destRectPrimary = getDestRect(primaryX, primaryY);
-	SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRectPrimary, &destRectPrimary);
+	SDL_RenderCopy(renderer_, texturePrimary, nullptr, &destRectPrimary);
 
-	SDL_Rect	srcRectSecondary = spriteSheet.getSprite(secondary.getColor());
+	SDL_Texture*	textureSecondary = imageManager.getTexture(secondary.getColor());
 	SDL_Rect	destRectSecondary = getDestRect(secondaryX, secondaryY);
-	SDL_RenderCopy(renderer_, spriteSheet.getTexture(), &srcRectSecondary, &destRectSecondary);
+	SDL_RenderCopy(renderer_, textureSecondary, nullptr, &destRectSecondary);
 }
 
 SDL_Renderer*	Renderer::getSDLRenderer() const {

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Board.hpp"
 #include "Renderer.hpp"
-#include "SpriteSheet.hpp"
+#include "ImageManager.hpp"
 #include "PuyoPair.hpp"
 #include "PuyoClearer.hpp"
 #include "ChainManager.hpp"
@@ -24,8 +24,8 @@ class	Game {
 		bool	isRunning_;
 
 		Renderer*	renderer_;
+		ImageManager	imageManager_;
 		Board*	board_;
-		SpriteSheet	spriteSheet_;
 		PuyoPair*	puyoPair_;
 		ChainManager*	chainManager_;
 		PuyoFinder	finder_;

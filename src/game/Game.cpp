@@ -8,8 +8,8 @@ Game::~Game() {
 
 bool	Game::init() {
 	try {
-		// Renderer を初期化
-		renderer_ = new Renderer("Puyo Game");
+		// GameRenderer を初期化
+		renderer_ = new GameRenderer("Puyo Game");
 		// ImageManager を初期化
 		imageManager_.initTextures(renderer_->getSDLRenderer());
 		board_ = new Board();

@@ -4,15 +4,14 @@
 #include "Board.hpp"
 #include "PuyoFinder.hpp"
 #include "PuyoClearer.hpp"
-#include "Renderer.hpp"
+#include "GameRenderer.hpp"
 #include <thread> // std::this_thread::sleep_for
 //#include "ScoreManager.hpp"
 #include <vector>
 
 class	ChainManager {
 	public:
-//		ChainManager(PuyoFinder& finder, PuyoClearer& clearer, ScoreManager& scorer);
-		ChainManager(PuyoFinder& finder, PuyoClearer& clearer, Renderer& renderer);
+		ChainManager(PuyoFinder& finder, PuyoClearer& clearer, GameRenderer& renderer);
 
 		// 連鎖の進行を管理
 		void	processChains(Board& board, ImageManager& imageManager);
@@ -24,7 +23,7 @@ class	ChainManager {
 		PuyoFinder&	finder_;
 		PuyoClearer&	clearer_;
 //		ScoreManager&	scorer_;
-		Renderer&	renderer_;
+		GameRenderer&	renderer_;
 };
 
 #endif

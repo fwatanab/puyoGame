@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "Board.hpp"
-#include "Renderer.hpp"
+#include "GameRenderer.hpp"
 #include "ImageManager.hpp"
 #include "PuyoPair.hpp"
 #include "PuyoClearer.hpp"
@@ -23,7 +23,7 @@ class	Game {
 	private:
 		bool	isRunning_;
 
-		Renderer*	renderer_;
+		GameRenderer*	renderer_;
 		ImageManager	imageManager_;
 		Board*	board_;
 		PuyoPair*	puyoPair_;

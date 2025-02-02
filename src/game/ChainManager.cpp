@@ -1,6 +1,6 @@
 #include "ChainManager.hpp"
 
-ChainManager::ChainManager(PuyoFinder& finder, PuyoClearer& clearer, Renderer& renderer) : finder_(finder), clearer_(clearer), renderer_(renderer) {}
+ChainManager::ChainManager(PuyoFinder& finder, PuyoClearer& clearer, GameRenderer& renderer) : finder_(finder), clearer_(clearer), renderer_(renderer) {}
 
 void	ChainManager::processChains(Board& board, ImageManager& imageManager) {
 	int	chainCount = 0; // 連鎖回数のカウント

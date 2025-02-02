@@ -30,6 +30,7 @@ set(SOURCE
     src/game/Game.cpp
     src/game/Board.cpp
     src/graphics/Renderer.cpp
+    src/graphics/GameRenderer.cpp
     src/game/Puyo.cpp
     src/game/PuyoPair.cpp
     src/game/PuyoFinder.cpp

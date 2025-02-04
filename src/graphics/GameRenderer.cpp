@@ -11,11 +11,11 @@ void	GameRenderer::renderBoard(const Board& board, const ImageManager& imageMana
 			SDL_Texture*	texture;
 			if (x == 0 || x == BOARD_WIDTH + 1 || y == BOARD_HEIGHT) {
 				// 壁の描画
-				texture = imageManager.getTexture(PuyoColor::WALL);
+				texture = imageManager.getGameTexture(GameTexture::WALL);
 			} else {
 				// ボード内のぷよの描画
 				const Puyo&	puyo = board.getGrid(x - 1, y);
-				texture = imageManager.getTexture(puyo.getColor());
+				texture = imageManager.getTextureForPuyo(puyo.getColor());
 			}
 			
 			// テクスチャが nullptr でない場合にのみ描画を行う
@@ -38,11 +38,11 @@ void	GameRenderer::renderPuyoPair(const PuyoPair& puyoPair, const ImageManager& 
 	int	secondaryX = secondary.getX() + 1; // 左の壁を避けるため +1
 	int	secondaryY = secondary.getY();
 
-	SDL_Texture*	texturePrimary = imageManager.getTexture(primary.getColor());
+	SDL_Texture*	texturePrimary = imageManager.getTextureForPuyo(primary.getColor());
 	SDL_Rect	destRectPrimary = getDestRect(primaryX, primaryY);
 	SDL_RenderCopy(renderer_, texturePrimary, nullptr, &destRectPrimary);
 
-	SDL_Texture*	textureSecondary = imageManager.getTexture(secondary.getColor());
+	SDL_Texture*	textureSecondary = imageManager.getTextureForPuyo(secondary.getColor());
 	SDL_Rect	destRectSecondary = getDestRect(secondaryX, secondaryY);
 	SDL_RenderCopy(renderer_, textureSecondary, nullptr, &destRectSecondary);
 }

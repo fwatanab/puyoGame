@@ -37,6 +37,8 @@ set(SOURCE
     src/game/ChainManager.cpp
     src/game/PuyoClearer.cpp
     src/graphics/ImageManager.cpp
+#    src/ui/Menu.cpp
+#    src/ui/MenuController.cpp
 )
 
 # 実行ファイルをビルドディレクトリに生成

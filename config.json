@@ -27,8 +27,25 @@
                 "green": "assets/images/green_puyo.png",
                 "yellow": "assets/images/yellow_puyo.png",
                 "purple": "assets/images/purple_puyo.png",
-                "garbage": "assets/images/garbage_puyo.png",
-                "wall": "assets/images/wall.png"
+                "garbage": "assets/images/garbage_puyo.png"
+            },
+            "wall": "assets/images/wall.png"
+        }
+    },
+    "menu": {
+        "background": "assets/images/menu_bg.png",
+        "menu_items": {
+            "frame": "assets/images/menu_item_frame.png",
+            "highlight_color": {
+                "r": 255,
+                "g": 255,
+                "b": 0
+            },
+            "font": "assets/fonts/menu_font.ttf",
+            "items": {
+                "solo_mode": "ソロモード",
+                "duo_mode": "デュオモード",
+                "exit": "終了"
             }
         }
     }

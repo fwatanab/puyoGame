@@ -37,13 +37,33 @@ def generate_header():
             # テーマ設定
             themes = config['themes']
             header_file.write("\n// テーマ設定\n")
-            header_file.write(f"#define BACKGROUND_IMAGE \"{themes['default']['background']}\"\n")
+            header_file.write(f"#define GAME_BACKGROUND_IMAGE \"{themes['default']['background']}\"\n")
 
             puyo_colors = themes['default']['puyo_colors']
             for color, image_path in puyo_colors.items():
                 # 各ぷよの色を定義
                 macro_name = f"PUYO_{color.upper()}_IMAGE"
                 header_file.write(f"#define {macro_name} \"{image_path}\"\n")
+
+            header_file.write(f"#define GAME_WALL_IMAGE \"{themes['default']['wall']}\"\n")
+
+            # メニュー設定の追加
+            header_file.write("\n// メニュー設定\n")
+            menu_config = config['menu']
+            header_file.write(f"#define MENU_BACKGROUND \"{menu_config['background']}\"\n")
+            header_file.write(f"#define MENU_FRAME_IMAGE \"{menu_config['menu_items']['frame']}\"\n")
+
+            highlight_color = menu_config['menu_items']['highlight_color']
+            header_file.write(f"#define MENU_HIGHLIGHT_COLOR_R {highlight_color['r']}\n")
+            header_file.write(f"#define MENU_HIGHLIGHT_COLOR_G {highlight_color['g']}\n")
+            header_file.write(f"#define MENU_HIGHLIGHT_COLOR_B {highlight_color['b']}\n")
+
+            header_file.write(f"#define MENU_FONT \"{menu_config['menu_items']['font']}\"\n")
+
+            menu_items = menu_config['menu_items']['items']
+            for key, value in menu_items.items():
+                macro_name = f"MENU_ITEM_{key.upper()}"
+                header_file.write(f"#define {macro_name} \"{value}\"\n")
 
             print(f"Generated {OUTPUT_FILE} successfully.")
     except Exception as e:

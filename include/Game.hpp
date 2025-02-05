@@ -9,6 +9,7 @@
 #include "PuyoClearer.hpp"
 #include "ChainManager.hpp"
 #include "GeneratedConfig.hpp"
+#include <vector>
 
 class	Game {
 	public:
@@ -26,7 +27,7 @@ class	Game {
 		GameRenderer*	renderer_;
 		ImageManager	imageManager_;
 		Board*	board_;
-		PuyoPair*	puyoPair_;
+		std::vector<PuyoPair*>	puyoPairs_;
 		ChainManager*	chainManager_;
 		PuyoFinder	finder_;
 		PuyoClearer	clearer_;

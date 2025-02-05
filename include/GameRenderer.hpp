@@ -15,6 +15,8 @@ class	GameRenderer : public Renderer {
 
 		SDL_Rect	getDestRect(int x, int y) const;
 
+		void	renderNextPuyoPair(const PuyoPair& nextPair, const PuyoPair& nextNextPair, const ImageManager& imageManager);
+
 		void	render() override;
 
 };

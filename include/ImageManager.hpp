@@ -7,7 +7,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "Puyo.hpp"
-#include "Menu.hpp"
 #include "GeneratedConfig.hpp"
 
 // ゲーム用のテクスチャを表す列挙型

@@ -40,6 +40,9 @@ set(SOURCE
     src/game/ScoreManager.cpp
     src/graphics/ImageManager.cpp
     src/graphics/TextRenderer.cpp
+    src/ui/Menu.cpp
+    src/ui/MenuController.cpp
+    src/graphics/MenuRenderer.cpp
 )
 
 # 実行ファイルをビルドディレクトリに生成

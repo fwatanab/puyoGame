@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
 import struct
+import subprocess
+import shutil
 import zlib
 
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "assets", "images")
@@ -95,6 +97,49 @@ def make_next_panel(width, height, base_color, accent_color, border_color):
     return pixels
 
 
+def make_wall_texture(width, height, base_top, base_bottom, neon_color, grid_spacing=12):
+    pixels = []
+    for y in range(height):
+        row = []
+        for x in range(width):
+            ty = y / max(height - 1, 1)
+            tx = x / max(width - 1, 1)
+            r = lerp(base_top[0], base_bottom[0], ty)
+            g = lerp(base_top[1], base_bottom[1], ty)
+            b = lerp(base_top[2], base_bottom[2], ty)
+
+            diag = (tx + ty) * 0.5
+            r = min(255, int(r + 20 * diag))
+            g = min(255, int(g + 25 * diag))
+            b = min(255, int(b + 35 * diag))
+
+            glow = 0
+            if x % grid_spacing == 0 or y % grid_spacing == 0:
+                glow = 0.7
+            elif x % grid_spacing == grid_spacing // 2 or y % grid_spacing == grid_spacing // 2:
+                glow = 0.4
+
+            if glow > 0:
+                r = int((1 - glow) * r + glow * neon_color[0])
+                g = int((1 - glow) * g + glow * neon_color[1])
+                b = int((1 - glow) * b + glow * neon_color[2])
+
+            row.append([r, g, b, 255])
+        pixels.append(row)
+    return pixels
+
+
+def reencode_png(path):
+    if not shutil.which("sips"):
+        return
+    tmp_path = f"{path}.tmp"
+    try:
+        subprocess.run(["sips", "-s", "format", "png", path, "--out", tmp_path], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        os.replace(tmp_path, path)
+    except Exception:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
 def ensure_assets_dir():
     os.makedirs(ASSETS_DIR, exist_ok=True)
 
@@ -112,6 +157,7 @@ def main():
     )
     hud_panel_path = os.path.join(ASSETS_DIR, "hud_panel.png")
     write_png(hud_panel_path, 360, 240, hud_panel)
+    reencode_png(hud_panel_path)
 
     next_panel = make_next_panel(
         width=240,
@@ -122,7 +168,21 @@ def main():
     )
     next_panel_path = os.path.join(ASSETS_DIR, "hud_next_panel.png")
     write_png(next_panel_path, 240, 280, next_panel)
+    reencode_png(next_panel_path)
     print(f"Generated {hud_panel_path} and {next_panel_path}")
+
+    wall_texture = make_wall_texture(
+        width=128,
+        height=128,
+        base_top=(20, 35, 60),
+        base_bottom=(45, 70, 110),
+        neon_color=(80, 220, 255),
+        grid_spacing=16,
+    )
+    wall_path = os.path.join(ASSETS_DIR, "wall.png")
+    write_png(wall_path, 128, 128, wall_texture)
+    reencode_png(wall_path)
+    print(f"Generated {wall_path}")
 
 
 if __name__ == "__main__":

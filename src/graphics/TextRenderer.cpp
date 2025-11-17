@@ -136,6 +136,15 @@ const std::unordered_map<char, Glyph>& glyphMap() {
 			".##.#",
 			"..###"
 		})},
+		{'D', glyphFromRows({
+			"####.",
+			"##.##",
+			"##.##",
+			"##.##",
+			"##.##",
+			"##.##",
+			"####."
+		})},
 		{'O', glyphFromRows({
 			".###.",
 			"##.##",
@@ -190,6 +199,15 @@ const std::unordered_map<char, Glyph>& glyphMap() {
 			"..#..",
 			"#####"
 		})},
+		{'L', glyphFromRows({
+			"##...",
+			"##...",
+			"##...",
+			"##...",
+			"##...",
+			"##...",
+			"#####"
+		})},
 		{'N', glyphFromRows({
 			"##.##",
 			"###.#",
@@ -216,6 +234,15 @@ const std::unordered_map<char, Glyph>& glyphMap() {
 			"..#..",
 			"..#..",
 			"..#.."
+		})},
+		{'U', glyphFromRows({
+			"##.##",
+			"##.##",
+			"##.##",
+			"##.##",
+			"##.##",
+			"##.##",
+			".###."
 		})},
 		{'X', glyphFromRows({
 			"##.##",

@@ -1,15 +1,22 @@
+version: "3.9"
+
 services:
   puyogame:
+    image: docker-puyogame
     build:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: puyogame_container
     working_dir: /app
+    stdin_open: true
+    tty: true
     environment:
-      - DISPLAY=host.docker.internal:0  # macOS/Windows
-      # - DISPLAY=:0  # Linux / echo $DISPLAY参照
-      - SDL_HINT_RENDER_DRIVER=software  # ソフトウェアレンダリングを強制
-      - LIBGL_ALWAYS_SOFTWARE=1
-      - SDL_VIDEODRIVER=x11
+      DISPLAY: ${DISPLAY:-}
+      FORCE_HEADLESS: ${FORCE_HEADLESS:-0}
+      FORCE_REBUILD: ${FORCE_REBUILD:-0}
+      XVFB_RESOLUTION: ${XVFB_RESOLUTION:-1920x1080x24}
+      SDL_HINT_RENDER_DRIVER: software
+      LIBGL_ALWAYS_SOFTWARE: "1"
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw  # ホストの X11 ソケットをコンテナにマウント
+      - ..:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw

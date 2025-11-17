@@ -27,6 +27,7 @@ add_custom_target(GenerateConfig ALL DEPENDS ${GENERATED_HEADER})
 # ソースファイルの指定
 set(SOURCE
     src/main.cpp
+    src/PuyoGame.cpp
     src/game/Game.cpp
     src/game/Board.cpp
     src/graphics/Renderer.cpp
@@ -36,9 +37,9 @@ set(SOURCE
     src/game/PuyoFinder.cpp
     src/game/ChainManager.cpp
     src/game/PuyoClearer.cpp
+    src/game/ScoreManager.cpp
     src/graphics/ImageManager.cpp
-#    src/ui/Menu.cpp
-#    src/ui/MenuController.cpp
+    src/graphics/TextRenderer.cpp
 )
 
 # 実行ファイルをビルドディレクトリに生成
@@ -65,15 +66,11 @@ endif()
 
 # SDL2_image の設定
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(SDL2IMAGE REQUIRED SDL2_image)
+pkg_check_modules(SDL2IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 
-if(SDL2IMAGE_FOUND)
-    message(STATUS "Found SDL2_image in ${SDL2IMAGE_INCLUDE_DIRS}")
-    target_include_directories(PuyoGame PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
-    target_link_libraries(PuyoGame PRIVATE ${SDL2IMAGE_LIBRARIES})
-else()
-    message(FATAL_ERROR "SDL2_image not found!")
-endif()
+message(STATUS "Found SDL2_image in ${SDL2IMAGE_INCLUDE_DIRS}")
+target_include_directories(PuyoGame PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
+target_link_libraries(PuyoGame PRIVATE PkgConfig::SDL2IMAGE)
 
 # OpenGL の設定
 find_package(OpenGL REQUIRED)
@@ -91,15 +88,6 @@ if(X11_LIB)
     target_link_libraries(PuyoGame PRIVATE ${X11_LIB})
 else()
     message(FATAL_ERROR "X11 not found!")
-endif()
-
-# nlohmann/json の設定
-find_package(nlohmann_json REQUIRED)
-if(nlohmann_json_FOUND)
-    message(STATUS "Found nlohmann_json")
-    target_link_libraries(PuyoGame PRIVATE nlohmann_json::nlohmann_json)
-else()
-    message(FATAL_ERROR "nlohmann_json not found!")
 endif()
 
 # アセットディレクトリの定義

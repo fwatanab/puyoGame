@@ -31,31 +31,37 @@ cd puyogame
 
 ## Build and Run with Docker
 
-1. Build the Docker image:
-
+### Quick start
+1. ビルドと起動:
 ```bash
-make build
+docker compose -f docker/docker-compose.yml up --build
 ```
+コンテナが起動すると自動的に `cmake` でビルド済みの `./build/PuyoGame` が実行されます。
 
-2. Run the game in a container:
+2. 既存コンテナに入って自分でコマンドを叩きたい場合:
 ```bash
-make run
-```
-
-3. Check the running container status:
-```bash
-make status
-```
-4. View logs (optional):
-```bash
-make logs
+docker compose -f docker/docker-compose.yml exec puyogame /bin/bash
+# 例: /app/build/PuyoGame
 ```
 
-5. Stop and clean up:
+3. 停止とクリーンアップ:
 ```bash
-make stop
-make clean
+docker compose -f docker/docker-compose.yml down --volumes --remove-orphans
 ```
+
+`docker/docker-compose.yml` は `/app` にホストのワークスペースをマウントし、エントリーポイントで `cmake -S . -B build && cmake --build build` を自動実行します。`FORCE_REBUILD=1` を環境変数に指定すると毎回フルリビルドが走ります。
+
+### ディスプレイ設定
+- ホストの X11 を使ってウィンドウを表示したい場合は、ホスト側で `DISPLAY` と `/tmp/.X11-unix` をエクスポートしてください（macOS なら XQuartz、Windows なら X410/VcXsrv などを利用）。例:  
+  ```bash
+  export DISPLAY=host.docker.internal:0
+  xhost +localhost
+  docker compose -f docker/docker-compose.yml up --build
+  ```
+- `DISPLAY` が未設定、もしくはソケットにアクセスできない状況ではコンテナ内で自動的に `xvfb-run` を起動し、仮想ディスプレイ上で SDL を実行します（FORCE_HEADLESS=1 で明示的に指定可能）。ヘッドレス実行は可視化されませんが、CI や自動テスト用途では便利です。
+- 画面サイズを変えたい場合は `XVFB_RESOLUTION=1280x720x24` のように指定してください。
+
+Makefile のラッパーを使いたい場合は `make build` などもそのまま利用できますが、内部的には上記 compose ファイルを呼び出すようにしてください。
 ---
 
 ## Development

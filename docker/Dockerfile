@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tar \
     python3 \
     python3-pip \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 # SDL2 のソースコードをダウンロードしてビルド
@@ -24,9 +25,10 @@ RUN wget https://www.libsdl.org/release/SDL2-2.28.0.tar.gz -O /tmp/SDL2.tar.gz \
     && cd / \
     && rm -rf /tmp/SDL2*
 
-# SDL2_image の依存関係をインストール
+# SDL2_image および SDL2_ttf の依存関係をインストール
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libsdl2-image-dev \
+    libsdl2-ttf-dev \
     libjpeg-dev \
     libpng-dev \
     libtiff-dev \
@@ -48,7 +50,9 @@ COPY . /app
 RUN mkdir -p build \
     && cd build \
     && cmake .. \
-    && make -j4
+    && cmake --build . -- -j"$(nproc)"
 
-# 実行可能ファイルをデフォルトで起動
-CMD ["./build/PuyoGame"]
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

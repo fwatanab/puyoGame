@@ -18,20 +18,24 @@
         "chain_speed": 200,
         "gravity_speed": 50
     },
-    "themes": {
-        "default": {
-            "background": "assets/images/default_bg.png",
-            "puyo_colors": {
-                "red": "assets/images/red_puyo.png",
-                "blue": "assets/images/blue_puyo.png",
-                "green": "assets/images/green_puyo.png",
-                "yellow": "assets/images/yellow_puyo.png",
-                "purple": "assets/images/purple_puyo.png",
-                "garbage": "assets/images/garbage_puyo.png"
-            },
-            "wall": "assets/images/wall.png"
-        }
-    },
+        "themes": {
+            "default": {
+                "background": "assets/images/default_bg.png",
+                "puyo_colors": {
+                    "red": "assets/images/red_puyo.png",
+                    "blue": "assets/images/blue_puyo.png",
+                    "green": "assets/images/green_puyo.png",
+                    "yellow": "assets/images/yellow_puyo.png",
+                    "purple": "assets/images/purple_puyo.png",
+                    "garbage": "assets/images/garbage_puyo.png"
+                },
+                "wall": "assets/images/wall.png",
+                "hud": {
+                    "score_panel": "assets/images/hud_panel.png",
+                    "next_panel": "assets/images/hud_next_panel.png"
+                }
+            }
+        },
     "menu": {
         "background": "assets/images/menu_bg.png",
         "menu_items": {

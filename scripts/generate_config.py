@@ -47,6 +47,15 @@ def generate_header():
 
             header_file.write(f"#define GAME_WALL_IMAGE \"{themes['default']['wall']}\"\n")
 
+            hud_config = themes['default'].get('hud', {})
+            if hud_config:
+                score_panel = hud_config.get('score_panel')
+                next_panel = hud_config.get('next_panel')
+                if score_panel:
+                    header_file.write(f"#define HUD_SCORE_PANEL_IMAGE \"{score_panel}\"\n")
+                if next_panel:
+                    header_file.write(f"#define HUD_NEXT_PANEL_IMAGE \"{next_panel}\"\n")
+
             # メニュー設定の追加
             header_file.write("\n// メニュー設定\n")
             menu_config = config['menu']
@@ -71,4 +80,3 @@ def generate_header():
 
 if __name__ == "__main__":
     generate_header()
-

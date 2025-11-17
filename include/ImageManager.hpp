@@ -19,7 +19,9 @@ enum class	GameTexture {
 	YELLOW_PUYO,
 	PURPLE_PUYO,
 	GARBAGE_PUYO,
-	WALL
+	WALL,
+	HUD_SCORE_PANEL,
+	HUD_NEXT_PANEL
 };
 
 // メニュー用のテクスチャを表す列挙型

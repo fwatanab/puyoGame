@@ -8,6 +8,7 @@
 #include "PuyoPair.hpp"
 #include "PuyoClearer.hpp"
 #include "ChainManager.hpp"
+#include "ScoreManager.hpp"
 #include "GeneratedConfig.hpp"
 #include <vector>
 
@@ -31,6 +32,9 @@ class	Game {
 		ChainManager*	chainManager_;
 		PuyoFinder	finder_;
 		PuyoClearer	clearer_;
+		ScoreManager	scoreManager_;
+		int	lastChainCount_;
+		int	bestChainCount_;
 };
 
 #endif

@@ -1,11 +1,7 @@
-#include <Game.hpp>
+#include "PuyoGame.hpp"
 
 int	main() {
-	Game	game;
-
-	if (!game.init()) {
-		return 1;
-	}
+	PuyoGame	game;
 	game.run();
 	return 0;
 }

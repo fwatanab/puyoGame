@@ -1,6 +1,7 @@
 #include "Game.hpp"
+#include <algorithm>
 
-Game::Game() : isRunning_(false), renderer_(nullptr), imageManager_(ImageManager()), board_(nullptr), chainManager_(nullptr) {
+Game::Game() : isRunning_(false), renderer_(nullptr), imageManager_(ImageManager()), board_(nullptr), chainManager_(nullptr), scoreManager_(), lastChainCount_(0), bestChainCount_(0) {
 	puyoPairs_.reserve(3);
 }
 
@@ -112,7 +113,11 @@ void Game::update() {
 		}
 
 		// 連鎖処理を実行
-		chainManager_->processChains(*board_, imageManager_);
+		int	chainCount = chainManager_->processChains(*board_, imageManager_, scoreManager_);
+		lastChainCount_ = chainCount;
+		if (chainCount > bestChainCount_) {
+			bestChainCount_ = chainCount;
+		}
 
 		lastDropTime = currentTime;
 		return;
@@ -141,7 +146,7 @@ void	Game::render() {
 	renderer_->renderBoard(*board_, imageManager_);
 	if (puyoPairs_.size() > 2) {
 		renderer_->renderPuyoPair(*puyoPairs_[0], imageManager_);
-		renderer_->renderNextPuyoPair(*puyoPairs_[1], *puyoPairs_[2], imageManager_);
+		renderer_->renderSidePanel(*puyoPairs_[1], *puyoPairs_[2], scoreManager_.getTotalScore(), lastChainCount_, bestChainCount_, imageManager_);
 	} else {
 		std::cerr << "Error: puyoPairs_ does not have enough elements." << std::endl;
 	}
@@ -165,5 +170,4 @@ void	Game::close() {
 		delete chainManager_;
 		chainManager_ = nullptr;
 	}
-	SDL_Quit();
 }

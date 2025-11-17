@@ -17,13 +17,12 @@ void	ImageManager::initTextures(SDL_Renderer* renderer) {
 	loadGameTexture(renderer, GameTexture::PURPLE_PUYO, PUYO_PURPLE_IMAGE);
 //	loadGameTexture(renderer, GameTexture::GARBAGE_PUYO, PUYO_GARBAGE_IMAGE);
 	loadGameTexture(renderer, GameTexture::WALL, GAME_WALL_IMAGE);
+	loadGameTexture(renderer, GameTexture::HUD_SCORE_PANEL, HUD_SCORE_PANEL_IMAGE);
+	loadGameTexture(renderer, GameTexture::HUD_NEXT_PANEL, HUD_NEXT_PANEL_IMAGE);
 
 	// メニュー関連テクスチャをロード
-//	loadMenuTexture(renderer, MenuTexture::BACKGROUND, MENU_BACKGROUND);
-//	loadMenuTexture(renderer, MenuTexture::FRAME, MENU_FRAME_IMAGE);
-//	loadMenuTexture(renderer, MenuTexture::SOLO_MODE, MENU_ITEM_SOLO_MODE);
-//	loadMenuTexture(renderer, MenuTexture::DUO_MODE, MENU_ITEM_DUO_MODE);
-//	loadMenuTexture(renderer, MenuTexture::EXIT, MENU_ITEM_EXIT);
+	loadMenuTexture(renderer, MenuTexture::BACKGROUND, MENU_BACKGROUND);
+	loadMenuTexture(renderer, MenuTexture::FRAME, MENU_FRAME_IMAGE);
 }
 
 
@@ -123,6 +122,10 @@ SDL_Texture*	ImageManager::getTextureForMenu(MenuOption option) const {
 	switch (option) {
 		case MenuOption::SOLO:
 			return getMenuTexture(MenuTexture::SOLO_MODE);
+		case MenuOption::DUO:
+			return getMenuTexture(MenuTexture::DUO_MODE);
+		case MenuOption::EXIT:
+			return getMenuTexture(MenuTexture::EXIT);
 		default:
 			throw std::runtime_error("Invalid MenuOption.");
 	}

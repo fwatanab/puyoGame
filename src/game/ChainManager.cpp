@@ -1,8 +1,9 @@
 #include "ChainManager.hpp"
+#include <chrono>
 
 ChainManager::ChainManager(PuyoFinder& finder, PuyoClearer& clearer, GameRenderer& renderer) : finder_(finder), clearer_(clearer), renderer_(renderer) {}
 
-void	ChainManager::processChains(Board& board, ImageManager& imageManager) {
+int	ChainManager::processChains(Board& board, ImageManager& imageManager, ScoreManager& scorer) {
 	int	chainCount = 0; // 連鎖回数のカウント
 
 	while (true) {
@@ -27,9 +28,12 @@ void	ChainManager::processChains(Board& board, ImageManager& imageManager) {
 		// 1秒待機
 		std::this_thread::sleep_for(std::chrono::milliseconds(CHAIN_SPEED));
 
-//		// 得点を計算して加算
-//		int	score = scorer_.calculateScore(groups.size(), chainCount);
-//		scorer_.addScore(score);
+		int	totalCleared = 0;
+		for (std::vector<std::vector<Puyo>>::const_iterator it = groups.begin(); it != groups.end(); ++it) {
+			totalCleared += static_cast<int>(it->size());
+		}
+		int	score = scorer.calculateScore(totalCleared, chainCount);
+		scorer.addScore(score);
 
 		// 重力を適用
 		clearer_.applyGravity(board);
@@ -40,6 +44,7 @@ void	ChainManager::processChains(Board& board, ImageManager& imageManager) {
 		// 連鎖回数を増加
 		chainCount++;
 	}
+	return chainCount;
 }
 
 void	ChainManager::updateRendering(Board& board, ImageManager& imageManager) {

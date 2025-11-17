@@ -45,11 +45,11 @@
                 "g": 255,
                 "b": 0
             },
-            "font": "assets/fonts/menu_font.ttf",
+            "font": "",
             "items": {
-                "solo_mode": "ソロモード",
-                "duo_mode": "デュオモード",
-                "exit": "終了"
+                "solo_mode": "SOLO",
+                "duo_mode": "DUO",
+                "exit": "EXIT"
             }
         }
     }

@@ -26,10 +26,7 @@ enum class	GameTexture {
 // メニュー用のテクスチャを表す列挙型
 enum class	MenuTexture {
 	BACKGROUND,
-	FRAME,
-	SOLO_MODE,
-	DUO_MODE,
-	EXIT
+	FRAME
 };
 
 class	ImageManager {
@@ -52,7 +49,6 @@ class	ImageManager {
 
 		// 変換メソッド
 		SDL_Texture*	getTextureForPuyo(PuyoColor color) const;
-		SDL_Texture*	getTextureForMenu(MenuOption option) const;
 
 	private:
 		std::map<GameTexture, SDL_Texture*>	gameTextures_;

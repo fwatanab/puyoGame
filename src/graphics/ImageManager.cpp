@@ -117,16 +117,3 @@ SDL_Texture*	ImageManager::getTextureForPuyo(PuyoColor color) const {
 			throw std::runtime_error("Invalid PuyoColor.");
 	}
 }
-
-SDL_Texture*	ImageManager::getTextureForMenu(MenuOption option) const {
-	switch (option) {
-		case MenuOption::SOLO:
-			return getMenuTexture(MenuTexture::SOLO_MODE);
-		case MenuOption::DUO:
-			return getMenuTexture(MenuTexture::DUO_MODE);
-		case MenuOption::EXIT:
-			return getMenuTexture(MenuTexture::EXIT);
-		default:
-			throw std::runtime_error("Invalid MenuOption.");
-	}
-}

@@ -15,7 +15,6 @@ class	Renderer {
 		void	clear();   // 描画領域をクリア
 
 		SDL_Renderer*	getSDLRenderer() const;
-		virtual void	render() = 0; // 各派生クラスで描画処理を実装
 
 
 	protected:
